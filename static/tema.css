@@ -1,0 +1,22 @@
+/* ===== Navbar BARROVIVO ===== */
+.navbar-bv {
+  background-color: #FEF8EC;
+}
+
+.navbar-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  padding: 0 .5rem;
+}
+
+/* Tamaño del logo */
+.navbar-brand .logo-bv {
+  height: 64px;   /* súbelo o bájalo: 56px, 72px, etc. */
+  width: auto;
+}
+
+@media (max-width: 576px) {
+  .navbar-brand .logo-bv {
+    height: 48px;
+  }
+}
