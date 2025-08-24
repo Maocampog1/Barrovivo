@@ -1,8 +1,5 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="py-5 text-center">
-  <h1 class="display-6 mb-3">Bienvenido a BARROVIVO</h1>
-  <p class="text-muted">Solo verificando la navbar y estilos.</p>
-</div>
+  <h1 class="h4 mb-3">Catálogo</h1>
+  {% include "productos.html" with productos=productos %}
 {% endblock %}
