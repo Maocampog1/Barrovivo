@@ -110,3 +110,46 @@
   .detalle-producto{ padding-top:4rem; }
 }
 
+/* Ajustes mínimos para el dropdown de filtros */
+.dropdown-menu{ border-radius: 12px; }
+
+
+/* ===== Tema naranja BARROVIVO ===== */
+:root{
+  --bs-primary: #EF6E3A;
+  --bs-primary-rgb: 239,110,58;
+  --bs-link-color: #EF6E3A;
+  --bs-link-hover-color: #d55f30;
+}
+
+/* Botón primario (Aplicar) */
+.btn-primary{
+  --bs-btn-color:#fff;
+  --bs-btn-bg:#EF6E3A;
+  --bs-btn-border-color:#EF6E3A;
+  --bs-btn-hover-bg:#d55f30;
+  --bs-btn-hover-border-color:#d55f30;
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+  --bs-btn-active-bg:#c9562c;
+  --bs-btn-active-border-color:#c9562c;
+}
+
+/* Checkboxes / radios en naranja */
+.form-check-input{
+  accent-color:#EF6E3A;               /* soporte moderno */
+}
+.form-check-input:checked{
+  background-color:#EF6E3A;           /* fallback Bootstrap */
+  border-color:#EF6E3A;
+}
+.form-check-input:focus{
+  border-color: rgba(239,110,58,.45);
+  box-shadow:0 0 0 .2rem rgba(239,110,58,.25);
+}
+
+/* Inputs/Select focus en naranja */
+.form-control:focus,
+.form-select:focus{
+  border-color: rgba(239,110,58,.45);
+  box-shadow:0 0 0 .2rem rgba(239,110,58,.25);
+}
