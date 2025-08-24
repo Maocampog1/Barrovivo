@@ -3,9 +3,7 @@
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
   {% for p in productos %}
     <div class="col">
-      <div class="card card-producto h-100">
-
-        <!-- Imagen -->
+      <div class="card card-producto h-100 position-relative">
         <div class="zona-img position-relative text-center">
           {% if p.imagen %}
             <img src="{{ p.imagen.url }}" class="img-fluid" alt="{{ p.nombre }}"
@@ -18,12 +16,13 @@
           <div class="hover-hint">Dar clic para comprar</div>
         </div>
 
-        <!-- MINI-CARD con nombre + precio  -->
         <div class="mini-card-info text-center">
           <div class="nombre">{{ p.nombre }}</div>
           <div class="precio">${{ p.precio|floatformat:0|intcomma }}</div>
         </div>
 
+        <!-- Hace clickeable toda la card -->
+        <a href="{% url 'producto:detalle' p.pk %}" class="stretched-link" aria-label="{{ p.nombre }}"></a>
       </div>
     </div>
   {% empty %}

@@ -79,3 +79,34 @@
   font-family:'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-weight:600;
 }
+
+
+/* Detalle de producto: tamaño de botones de cantidad */
+.detalle-producto .btn-group.cantidad .btn { width: 36px; }
+.detalle-producto .cantidad-input { width: 56px; }
+
+/* Botón Añadir al carrito (naranja) */
+.btn-bv{
+  background-color:#EF6E3A;
+  border-color:#EF6E3A;
+  color:#fff;
+}
+.btn-bv:hover{
+  background-color:#d55f30;
+  border-color:#d55f30;
+  color:#fff;
+}
+.btn-bv:active,
+.btn-bv:focus{
+  background-color:#c9562c;
+  border-color:#c9562c;
+  box-shadow:0 0 0 .2rem rgba(239,110,58,.25);
+  color:#fff;
+}
+
+/* Más espacio desde la navbar en la página de detalle */
+.detalle-producto{ padding-top:3rem; }
+@media (min-width: 992px){
+  .detalle-producto{ padding-top:4rem; }
+}
+
