@@ -1,9 +1,10 @@
 from django.urls import path
 from django.views.generic import RedirectView
+from .views import InicioProductosView
 
-app_name = 'producto'
+app_name = "producto"
 
 urlpatterns = [
-    # nombre requerido por {% url 'producto:favoritos' %} → redirige a home
-    path('favoritos/', RedirectView.as_view(pattern_name='usuario:home'), name='favoritos'),
+    path("", InicioProductosView.as_view(), name="home"),  # /producto/
+    path("favoritos/", RedirectView.as_view(pattern_name="producto:home"), name="favoritos"),
 ]
