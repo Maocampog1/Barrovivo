@@ -153,3 +153,20 @@
   border-color: rgba(239,110,58,.45);
   box-shadow:0 0 0 .2rem rgba(239,110,58,.25);
 }
+
+/* ===== Login BARROVIVO ===== */
+.login-wrap .lado-logo{
+  background:#FEF8EC;
+}
+
+/* Inputs suaves del login */
+.form-control.bv-soft{
+  background:#FEF8EC;
+  border-color: rgba(0,0,0,.12);
+  box-shadow:none;
+}
+.form-control.bv-soft:focus{
+  background:#FEF8EC;
+  border-color: rgba(239,110,58,.45);   /* acorde a marca */
+  box-shadow:0 0 0 .2rem rgba(239,110,58,.2);
+}
