@@ -170,3 +170,59 @@
   border-color: rgba(239,110,58,.45);   /* acorde a marca */
   box-shadow:0 0 0 .2rem rgba(239,110,58,.2);
 }
+/* ===== Registro / estilos de inputs ===== */
+
+/* Fondo crema siempre */
+.form-control.bv-soft{
+  background:#FEF8EC !important;
+  border-color:rgba(0,0,0,.15);
+}
+.form-control.bv-soft:focus{
+  background:#FEF8EC !important;
+  border-color:#EF6E3A;
+  box-shadow:0 0 0 .2rem rgba(239,110,58,.15);
+}
+
+/* Placeholder: gris suave y más pequeño (también en -lg) */
+.form-control.bv-soft::placeholder,
+.form-control-lg.bv-soft::placeholder{
+  color:#9aa0a6;
+  opacity:1;
+  font-size:.9rem;
+}
+/* Compat de placeholders */
+.form-control.bv-soft:-ms-input-placeholder{ color:#9aa0a6; }
+.form-control.bv-soft::-ms-input-placeholder{ color:#9aa0a6; }
+.form-control.bv-soft::-moz-placeholder{ color:#9aa0a6; }
+.form-control.bv-soft::-webkit-input-placeholder{ color:#9aa0a6; }
+
+/* Evitar autofill celeste */
+.form-control.bv-soft:-webkit-autofill,
+.form-control.bv-soft:-webkit-autofill:hover,
+.form-control.bv-soft:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 1000px #FEF8EC inset !important;
+  -webkit-text-fill-color:#212529 !important;
+}
+
+/* Botón “ojo” propio */
+.input-group .btn-eye{
+  background:#FEF8EC;
+  border-color:rgba(0,0,0,.15);
+}
+.input-group .btn-eye:focus{
+  border-color:#EF6E3A;
+  box-shadow:0 0 0 .2rem rgba(239,110,58,.15);
+}
+
+/* Ocultar ojo nativo del navegador (Edge/IE) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear{ display:none; }
+/* Algunos WebKit agregan botones especiales */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-contacts-auto-fill-button{
+  visibility:hidden; display:none; opacity:0;
+}
+
+/* Título y layout */
+.login-wrap .lado-logo{ background:#FEF8EC; }
+.titulo-registro{ text-align:center; font-weight:600; margin-bottom:1.25rem; }
