@@ -48,13 +48,18 @@
             <div class="text-danger small mb-3">{{ form.non_field_errors.0 }}</div>
           {% endif %}
 
-          <div class="d-grid">
-            <button class="btn btn-bv btn-lg rounded-pill">Iniciar Sesión</button>
-          </div>
+        <!-- Botón centrado, mismo estilo que 'Crear Cuenta' -->
+        <div class="text-center">
+            <button class="btn btn-bv btn-lg rounded-pill px-5">
+                Iniciar Sesión
+            </button>
+        </div>
 
-          <div class="text-center mt-3">
-            <a class="text-muted small text-decoration-none" href="#" onclick="return false;">Crear una cuenta</a>
-          </div>
+
+        <div class="text-center mt-3">
+            <a class="text-muted small text-decoration-none" href="{% url 'usuario:registro' %}">Crear una cuenta</a>
+        </div>
+
         </form>
       </div>
     </div>

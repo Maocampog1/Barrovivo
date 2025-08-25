@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block navbar %}{% endblock %}
+
+{% block main %}
+<div class="login-wrap">
+  <div class="row g-0 min-vh-100">
+    <!-- Izquierda: logo y fondo FEF8EC -->
+    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center lado-logo">
+      <div class="text-center p-4">
+        <img src="{{ MEDIA_URL }}logo.png" alt="BARROVIVO" style="max-height:200px;" class="mb-3">
+      </div>
+    </div>
+
+    <!-- Derecha: formulario -->
+    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center bg-white">
+      <div class="w-100 px-4" style="max-width:520px;">
+        <h1 class="titulo-registro">Crear Cuenta</h1>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="id_nombre" class="form-label small fw-semibold">Nombre completo*</label>
+            <input id="id_nombre" type="text" name="nombre"
+                   class="form-control form-control-lg bv-soft"
+                   placeholder="Ingresa tu nombre" autocomplete="name"
+                   value="{{ form.nombre.value|default:'' }}">
+            {% if form.nombre.errors %}<div class="text-danger small mt-1">{{ form.nombre.errors.0 }}</div>{% endif %}
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="id_email" class="form-label small fw-semibold">Email*</label>
+            <input id="id_email" type="email" name="email"
+                   class="form-control form-control-lg bv-soft"
+                   placeholder="Ingresa tu email" autocomplete="email"
+                   value="{{ form.email.value|default:'' }}">
+            {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="id_password1" class="form-label small fw-semibold">Contraseña*</label>
+            <div class="input-group input-group-lg">
+              <input id="id_password1" type="password" name="contrasena1"
+                     class="form-control bv-soft" placeholder="Mínimo 8 caracteres"
+                     autocomplete="new-password">
+              <button type="button" class="btn btn-eye" onclick="togglePwd('id_password1', this)" aria-label="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.contrasena1.errors %}<div class="text-danger small mt-1">{{ form.contrasena1.errors.0 }}</div>{% endif %}
+          </div>
+
+          <!-- Confirmar -->
+          <div class="mb-4">
+            <label for="id_password2" class="form-label small fw-semibold">Confirmar contraseña*</label>
+            <div class="input-group input-group-lg">
+              <input id="id_password2" type="password" name="contrasena2"
+                     class="form-control bv-soft" placeholder="Confirma tu contraseña"
+                     autocomplete="new-password">
+              <button type="button" class="btn btn-eye" onclick="togglePwd('id_password2', this)" aria-label="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.contrasena2.errors %}<div class="text-danger small mt-1">{{ form.contrasena2.errors.0 }}</div>{% endif %}
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="text-danger small mb-3">{{ form.non_field_errors.0 }}</div>
+          {% endif %}
+
+          <!-- botón centrado -->
+          <div class="text-center">
+            <button class="btn btn-bv btn-lg rounded-pill px-5">Crear Cuenta</button>
+          </div>
+
+          <div class="text-center mt-3">
+            <a class="text-muted small text-decoration-none" href="{% url 'usuario:login' %}">Ya tengo una cuenta</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estilos solo para este template -->
+<style>
+  .login-wrap .lado-logo{ background:#FEF8EC; }
+  .titulo-registro{ text-align:center; font-weight:600; margin-bottom:1.25rem; }
+  .bv-soft{ background:#FEF8EC; }
+  .bv-soft:focus{ background:#FEF8EC; box-shadow:0 0 0 .2rem rgba(239,110,58,.15); }
+  .form-control::placeholder{ font-size:.875rem; color:#8b8b8b; }
+  /* ocultar ojo nativo (Edge/Chromium) */
+  input::-ms-reveal, input::-ms-clear{ display:none; }
+  .btn-eye{ border:1px solid #ced4da; border-left:0; background:#fff; }
+  .btn-eye:hover{ background:#f6f6f6; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function togglePwd(id, btn){
+    var input = document.getElementById(id);
+    if(!input) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.querySelector('i').className = 'bi bi-eye-slash';
+    } else {
+      input.type = 'password';
+      btn.querySelector('i').className = 'bi bi-eye';
+    }
+  }
+</script>
+{% endblock %}

@@ -5,6 +5,11 @@ from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
+from django.contrib import messages
+from .forms import CrearCuentaForm
+
 
 from producto.models import Producto, Categoria
 
@@ -72,3 +77,15 @@ class PerfilView(LoginRequiredMixin, TemplateView):
     """Página de perfil (solo autenticados)."""
     template_name = 'perfil.html'
     login_url = reverse_lazy('usuario:login')
+
+
+class CrearCuentaView(FormView):
+    """Crear cuenta (registro)."""
+    template_name = 'registro.html'
+    form_class = CrearCuentaForm
+    success_url = reverse_lazy('usuario:login')
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Cuenta creada. Ahora puedes iniciar sesión.")
+        return super().form_valid(form)
