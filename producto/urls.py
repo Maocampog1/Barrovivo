@@ -2,6 +2,7 @@ from django.urls import path
 from django.views.generic import RedirectView
 from .views import InicioProductosView, ProductoDetalleView
 
+
 app_name = 'producto'
 
 urlpatterns = [

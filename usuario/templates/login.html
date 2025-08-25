@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{# Ocultar navbar en login #}
+{% block navbar %}{% endblock %}
+
+{# Usar toda la pantalla, no el container de base #}
+{% block main %}
+<div class="login-wrap">
+  <div class="row g-0 min-vh-100">
+
+    <!-- Mitad izquierda: logo con fondo FEF8EC -->
+    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center lado-logo">
+      <div class="text-center p-4">
+        <img src="{{ MEDIA_URL }}logo.png" alt="BARROVIVO" style="max-height:200px;" class="mb-3">
+        
+      </div>
+    </div>
+
+    <!-- Mitad derecha: formulario -->
+    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center bg-white">
+      <div class="w-100 px-4" style="max-width:460px;">
+        <h2 class="text-center fw-semibold mb-4">Ingresa</h2>
+
+        {% if request.GET.next %}
+          <div class="alert alert-warning py-2">Debes iniciar sesión para continuar.</div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Email*</label>
+            <input type="text" name="username" class="form-control form-control-lg bv-soft"
+                   placeholder="Ingresa tu email" value="{{ form.username.value|default:'' }}">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Contraseña*</label>
+            <div class="input-group input-group-lg">
+              <input id="id_password" type="password" name="password" class="form-control bv-soft"
+                     placeholder="Ingresa tu contraseña">
+              <button class="btn btn-outline-secondary" type="button" id="btnTogglePwd" aria-label="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="text-danger small mb-3">{{ form.non_field_errors.0 }}</div>
+          {% endif %}
+
+          <div class="d-grid">
+            <button class="btn btn-bv btn-lg rounded-pill">Iniciar Sesión</button>
+          </div>
+
+          <div class="text-center mt-3">
+            <a class="text-muted small text-decoration-none" href="#" onclick="return false;">Crear una cuenta</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('btnTogglePwd');
+  const input = document.getElementById('id_password');
+  if (!btn || !input) return;
+  btn.addEventListener('click', () => {
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.querySelector('i').className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+  });
+});
+</script>
+{% endblock %}
