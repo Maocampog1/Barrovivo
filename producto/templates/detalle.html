@@ -7,7 +7,25 @@
 
     <!-- Imagen grande -->
     <div class="col-12 col-lg-6">
-      <div class="p-3 bg-white border rounded-3 text-center">
+      <div class="p-3 bg-white border rounded-3 text-center position-relative">
+        <!-- Botón de favoritos -->
+        <div class="favorito-btn position-absolute" style="top: 15px; right: 15px; z-index: 10;">
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'producto:toggle_favorito' producto.id %}" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}?q={{ cantidad }}">
+              <button type="submit" class="btn-favorito btn-favorito-lg {% if es_favorito %}favorito-activo{% endif %}" 
+                      title="{% if es_favorito %}Quitar de favoritos{% else %}Agregar a favoritos{% endif %}">
+                <i class="bi bi-heart{% if es_favorito %}-fill{% endif %}"></i>
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'usuario:login' %}?next={{ request.path }}?q={{ cantidad }}" class="btn-favorito btn-favorito-lg" title="Inicia sesión para agregar a favoritos">
+              <i class="bi bi-heart"></i>
+            </a>
+          {% endif %}
+        </div>
+
         {% if producto.imagen %}
           <img src="{{ producto.imagen.url }}" class="img-fluid"
                style="max-height:520px;object-fit:contain;" alt="{{ producto.nombre }}">

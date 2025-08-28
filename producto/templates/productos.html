@@ -4,6 +4,24 @@
   {% for p in productos %}
     <div class="col">
       <div class="card card-producto h-100 position-relative">
+        <!-- Botón de favoritos -->
+        <div class="favorito-btn position-absolute" style="top: 10px; right: 10px; z-index: 10;">
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'producto:toggle_favorito' p.id %}" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button type="submit" class="btn-favorito {% if p.es_favorito %}favorito-activo{% endif %}" 
+                      title="{% if p.es_favorito %}Quitar de favoritos{% else %}Agregar a favoritos{% endif %}">
+                <i class="bi bi-heart{% if p.es_favorito %}-fill{% endif %}"></i>
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'usuario:login' %}?next={{ request.path }}" class="btn-favorito" title="Inicia sesión para agregar a favoritos">
+              <i class="bi bi-heart"></i>
+            </a>
+          {% endif %}
+        </div>
+
         <div class="zona-img position-relative text-center">
           {% if p.imagen %}
             <img src="{{ p.imagen.url }}" class="img-fluid" alt="{{ p.nombre }}"
