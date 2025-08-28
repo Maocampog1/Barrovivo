@@ -1,0 +1,33 @@
+{% load humanize %}
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+  {% for p in productos %}
+    <div class="col">
+      <div class="card card-producto h-100 position-relative">
+        <div class="zona-img position-relative text-center">
+          {% if p.imagen %}
+            <img src="{{ p.imagen.url }}" class="img-fluid" alt="{{ p.nombre }}"
+                 style="height:200px;object-fit:contain;">
+          {% else %}
+            <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
+              <span class="text-muted small">Sin imagen</span>
+            </div>
+          {% endif %}
+          <div class="hover-hint">Dar clic para comprar</div>
+        </div>
+
+        <div class="mini-card-info text-center">
+          <div class="nombre">{{ p.nombre }}</div>
+          <div class="precio">${{ p.precio|floatformat:0|intcomma }}</div>
+        </div>
+
+        <!-- Hace clickeable toda la card -->
+        <a href="{% url 'producto:detalle' p.pk %}" class="stretched-link" aria-label="{{ p.nombre }}"></a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="alert alert-secondary">No hay productos disponibles por ahora.</div>
+    </div>
+  {% endfor %}
+</div>

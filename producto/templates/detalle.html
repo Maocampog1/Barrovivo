@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-xl detalle-producto py-4">
+  <div class="row g-4 align-items-start">
+
+    <!-- Imagen grande -->
+    <div class="col-12 col-lg-6">
+      <div class="p-3 bg-white border rounded-3 text-center">
+        {% if producto.imagen %}
+          <img src="{{ producto.imagen.url }}" class="img-fluid"
+               style="max-height:520px;object-fit:contain;" alt="{{ producto.nombre }}">
+        {% else %}
+          <div class="py-5 text-muted">Sin imagen</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Datos -->
+    <div class="col-12 col-lg-6">
+      <h1 class="h2 fw-bold mb-3">{{ producto.nombre }}</h1>
+      <p class="fs-5 mb-4">Precio: ${{ producto.precio|floatformat:0|intcomma }}</p>
+
+      <!-- Cantidad + botón (sin backend, sin JS) -->
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <div class="btn-group cantidad" role="group" aria-label="Cantidad">
+          <a class="btn btn-outline-secondary btn-sm {% if cantidad <= 1 or sin_stock %}disabled{% endif %}"
+             href="?q={{ cantidad|add:'-1' }}" aria-label="Disminuir">−</a>
+
+          <input type="text" class="form-control form-control-sm text-center cantidad-input"
+                 value="{{ cantidad }}" readonly style="width:56px;">
+
+          {% if al_tope or sin_stock %}
+            <a class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">+</a>
+          {% else %}
+            <a class="btn btn-outline-secondary btn-sm"
+               href="?q={{ cantidad|add:'1' }}" aria-label="Aumentar">+</a>
+          {% endif %}
+        </div>
+
+        <button type="button" class="btn btn-bv btn-lg rounded-pill px-4" disabled>
+          Añadir al carrito
+        </button>
+      </div>
+
+      {% if sin_stock %}
+        <div class="text-danger small">Producto agotado.</div>
+      {% elif excedido %}
+        <div class="text-danger small">No hay esa cantidad disponible. Máximo {{ stock }}.</div>
+      {% elif al_tope %}
+       <div class="text-danger small">Ya no puedes seleccionar más.</div>
+
+      {% else %}
+        <div class="text-muted small">Disponible: {{ stock }}</div>
+      {% endif %}
+
+      {% if producto.descripcion %}
+        <div class="mb-4 mt-3">
+          <div class="fw-semibold">Descripción:</div>
+          <div>{{ producto.descripcion }}</div>
+        </div>
+      {% endif %}
+
+      <!-- Categorías (ManyToMany) -->
+      <div>
+        <div class="fw-semibold">Categorías:</div>
+        {% with cats=producto.categorias.all %}
+          {% if cats %}
+            <ul class="mb-0">
+              {% for c in cats %}
+                <li>{{ c.nombre }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <ul class="mb-0">
+              <li class="text-muted">Sin categoría</li>
+            </ul>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
