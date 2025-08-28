@@ -39,9 +39,14 @@
           {% endif %}
         </div>
 
-        <button type="button" class="btn btn-bv btn-lg rounded-pill px-4" disabled>
-          Añadir al carrito
-        </button>
+        <form method="post" action="{% url 'pedido:agregar_al_carrito' producto.id %}" class="d-inline">
+          {% csrf_token %}
+          <input type="hidden" name="cantidad" value="{{ cantidad }}">
+          <input type="hidden" name="next" value="{{ request.path }}?q={{ cantidad }}">
+          <button type="submit" class="btn btn-bv btn-lg rounded-pill px-4" {% if sin_stock %}disabled{% endif %}>
+            Añadir al carrito
+          </button>
+        </form>
       </div>
 
       {% if sin_stock %}
