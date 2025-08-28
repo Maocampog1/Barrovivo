@@ -2,97 +2,119 @@
 {% load humanize %}
 
 {% block content %}
-<div class="container">
-  <h1 class="mb-4">Carrito de compras</h1>
-  
+<div class="container py-3">
+
+  <!-- Encabezado: título + total a la derecha -->
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">Carro de Compras</h4>
+    <div class="fw-semibold">
+      <span class="text-muted me-1">Total :</span>
+      <span>${{ total|intcomma }}</span>
+    </div>
+  </div>
+
   {% if items %}
-    <div class="row">
-      <div class="col-lg-8">
-        <div class="card">
-          <div class="card-body">
-            {% for item in items %}
-            <div class="row mb-3 border-bottom pb-3">
-              <div class="col-md-3">
-                {% if item.producto.imagen %}
-                  <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid rounded">
-                {% else %}
-                  <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
-                    <span class="text-muted">Sin imagen</span>
-                  </div>
-                {% endif %}
-              </div>
-              <div class="col-md-6">
-                <h5 class="card-title">{{ item.producto.nombre }}</h5>
-                <p class="card-text text-muted">{{ item.producto.descripcion|truncatewords:20 }}</p>
-                <p class="card-text"><strong>Precio unitario: ${{ item.producto.precio|intcomma }}</strong></p>
-              </div>
-              <div class="col-md-3">
-                <form method="post" action="{% url 'pedido:actualizar_cantidad' item.id %}" class="mb-2">
+  <div class="row g-4">
+    <!-- Lista de ítems -->
+    <div class="col-lg-8">
+      <div class="p-0">
+        {% for item in items %}
+        <div class="border rounded-3 px-3 py-3 mb-3">
+          <div class="row align-items-center g-3">
+
+            <!-- Imagen -->
+            <div class="col-3 col-sm-2">
+              {% if item.producto.imagen %}
+                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid rounded">
+              {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:80px;">
+                  <span class="text-muted small">Sin imagen</span>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Nombre y precio -->
+            <div class="col-9 col-sm-6">
+              <div class="fw-semibold mb-1" style="line-height:1.2">{{ item.producto.nombre }}</div>
+              <div class="text-muted small mb-1">{{ item.producto.descripcion|default_if_none:""|truncatewords:14 }}</div>
+              <div class="fw-semibold">${{ item.producto.precio|intcomma }}</div>
+            </div>
+
+            <!-- Controles cantidad + eliminar -->
+            <div class="col-12 col-sm-4">
+              <div class="d-flex justify-content-sm-end align-items-center">
+
+                <!-- Form actualizar cantidad -->
+                <form method="post" action="{% url 'pedido:actualizar_cantidad' item.id %}" class="me-2">
                   {% csrf_token %}
-                  <div class="input-group input-group-sm">
-                    <button type="button" class="btn btn-outline-secondary" onclick="cambiarCantidad({{ item.id }}, -1)">-</button>
-                    <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control text-center" id="cantidad-{{ item.id }}">
-                    <button type="button" class="btn btn-outline-secondary" onclick="cambiarCantidad({{ item.id }}, 1)">+</button>
+                  <div class="input-group input-group-sm" style="max-width: 150px;">
+                    <button type="button" class="btn btn-outline-secondary" onclick="cambiarCantidad('{{ item.id }}', -1)">−</button>
+                    <input id="cantidad-{{ item.id }}" class="form-control text-center" type="number" name="cantidad" min="1" value="{{ item.cantidad }}">
+                    <button type="button" class="btn btn-outline-secondary" onclick="cambiarCantidad('{{ item.id }}', 1)">+</button>
                   </div>
-                  <button type="submit" class="btn btn-sm btn-primary mt-2">Actualizar</button>
+                  <div class="text-end mt-2">
+                    <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
+                  </div>
                 </form>
-                <form method="post" action="{% url 'pedido:remover_del_carrito' item.id %}" class="d-inline">
+
+                <!-- Eliminar -->
+                <form method="post" action="{% url 'pedido:remover_del_carrito' item.id %}">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres remover este producto?')">
-                    Remover
+                  <button type="submit" class="btn btn-outline-secondary btn-sm" title="Eliminar"
+                          onclick="return confirm('¿Eliminar este producto del carrito?')">
+                    <i class="bi bi-trash"></i>
                   </button>
                 </form>
+
               </div>
             </div>
-            {% endfor %}
+
           </div>
         </div>
-      </div>
-      
-      <div class="col-lg-4">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0">Resumen del pedido</h5>
-          </div>
-          <div class="card-body">
-            <div class="d-flex justify-content-between mb-2">
-              <span>Subtotal ({{ carrito.obtener_cantidad_total }} items):</span>
-              <span><strong>${{ total|intcomma }}</strong></span>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between mb-3">
-              <span class="h5">Total:</span>
-              <span class="h5"><strong>${{ total|intcomma }}</strong></span>
-            </div>
-            <button class="btn btn-success w-100" disabled>
-              Proceder al checkout
-            </button>
-            <small class="text-muted d-block text-center mt-2">
-              El checkout estará disponible próximamente
-            </small>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
+
+    <!-- Totales -->
+    <div class="col-lg-4">
+      <div class="p-4 rounded-3" style="background:#FEF8EC;">
+        <div class="fw-semibold text-center mb-3">Totales del carrito</div>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Subtotal:</span>
+          <span class="fw-semibold">${{ total|intcomma }}</span>
+        </div>
+
+        <hr class="my-3">
+
+        <div class="d-flex justify-content-between mb-3">
+          <span class="fw-semibold">Total:</span>
+          <span class="fw-semibold">${{ total|intcomma }}</span>
+        </div>
+
+        <!-- Cuando tengas el checkout, quita 'disabled' y pon href al url correspondiente -->
+        <a class="btn btn-bv w-100 py-2 disabled" aria-disabled="true">Ir a pagar</a>
+      </div>
+    </div>
+  </div>
+
   {% else %}
-    <div class="text-center py-5">
-      <i class="bi bi-cart3" style="font-size: 4rem; color: #ccc;"></i>
-      <h3 class="mt-3">Tu carrito está vacío</h3>
-      <p class="text-muted">Agrega algunos productos para comenzar a comprar.</p>
-      <a href="{% url 'producto:productos' %}" class="btn btn-primary">
-        Ver productos
-      </a>
-    </div>
+  <!-- Estado vacío -->
+  <div class="text-center py-5">
+    <i class="bi bi-cart3" style="font-size:4rem; color:#ccc;"></i>
+    <h5 class="mt-3">Tu carrito está vacío</h5>
+    <p class="text-muted">Agrega algunos productos para comenzar a comprar.</p>
+    <a href="{% url 'producto:productos' %}" class="btn btn-primary">Ver productos</a>
+  </div>
   {% endif %}
 </div>
 
 <script>
-function cambiarCantidad(itemId, cambio) {
-  const input = document.getElementById('cantidad-' + itemId);
-  const nuevaCantidad = parseInt(input.value) + cambio;
-  if (nuevaCantidad >= 1) {
-    input.value = nuevaCantidad;
+  function cambiarCantidad(id, delta) {
+    const input = document.getElementById('cantidad-' + id);
+    const actual = parseInt(input.value || '1', 10);
+    const nuevo = Math.max(1, actual + delta);
+    input.value = nuevo;
   }
-}
 </script>
 {% endblock %}
