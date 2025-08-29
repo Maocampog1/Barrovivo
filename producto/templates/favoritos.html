@@ -21,21 +21,26 @@
       <div class="border rounded-3 px-3 py-3 mb-3">
         <div class="row align-items-center g-3">
 
-          <!-- Imagen -->
+
+          <!-- Imagen con enlace al detalle -->
           <div class="col-12 col-lg-2">
-            {% if p.imagen %}
-              <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}" class="img-fluid rounded"
-                   style="max-height:120px; object-fit:contain;">
-            {% else %}
-              <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:120px;">
-                <span class="text-muted small">Sin imagen</span>
-              </div>
-            {% endif %}
+            <a href="{% url 'producto:detalle' p.pk %}">
+              {% if p.imagen %}
+                <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}" class="img-fluid rounded"
+                     style="max-height:120px; object-fit:contain;">
+              {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:120px;">
+                  <span class="text-muted small">Sin imagen</span>
+                </div>
+              {% endif %}
+            </a>
           </div>
 
-          <!-- Nombre -->
+          <!-- Nombre con enlace al detalle -->
           <div class="col-12 col-lg-5">
-            <div class="fw-semibold" style="line-height:1.2">{{ p.nombre }}</div>
+            <a href="{% url 'producto:detalle' p.pk %}" class="text-decoration-none text-dark">
+              <div class="fw-semibold" style="line-height:1.2">{{ p.nombre }}</div>
+            </a>
             {% if p.descripcion %}
               <div class="text-muted small">{{ p.descripcion|truncatewords:18 }}</div>
             {% endif %}
@@ -83,7 +88,7 @@
       <i class="bi bi-heart" style="font-size:4rem; color:#ccc;"></i>
       <h5 class="mt-3">No tienes favoritos</h5>
       <p class="text-muted">Agrega algunos productos a tus favoritos para verlos aquí.</p>
-      <a href="{% url 'producto:productos' %}" class="btn btn-bv">Ver productos</a>
+  <a href="{% url 'producto:inicio' %}" class="btn btn-bv">Ver productos</a>
     </div>
   {% endif %}
 
