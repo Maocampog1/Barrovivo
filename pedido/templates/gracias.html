@@ -10,25 +10,15 @@
       En tu perfil puedes verificar tus compras.
     </p>
 
-    <div class="d-flex flex-column align-items-center gap-3">
-      {% if pdf_disponible %}
-        <a href="{% url 'pedido:factura_pdf' %}" class="btn btn-bv btn-bv-cta d-inline-flex align-items-center gap-2" style="max-width: 420px;">
-          <span>Descarga tu factura</span>
-          <i class="bi bi-receipt"></i>
-        </a>
-      {% else %}
-        <div class="alert alert-warning mb-0 text-center" role="alert">
-          La descarga de factura en PDF no está disponible en este dispositivo.
-        </div>
-        <a href="{% url 'pedido:factura_html' %}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2">
-          <span>Ver factura (HTML)</span>
-          <i class="bi bi-box-arrow-up-right"></i>
-        </a>
-      {% endif %}
+    <div class="d-flex justify-content-center">
+      <a href="{% url 'pedido:factura_html' %}" class="btn btn-bv d-inline-flex align-items-center gap-2 px-4 py-2" style="max-width: 420px;">
+        <span>Ver / Descargar factura</span>
+        <i class="bi bi-receipt"></i>
+      </a>
     </div>
 
     <div class="text-center mt-4">
-      <img src="{% static 'multimedia/logo.png' %}" alt="BARROVIVO" style="height:72px;">
+      <img src="{{ MEDIA_URL }}logo.png" alt="BARROVIVO" style="height:72px;">
     </div>
   </div>
 </div>
