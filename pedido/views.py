@@ -232,26 +232,6 @@ class GraciasView(TemplateView):
         return ctx
 
 
-class FacturaPDFView(View):
-    template_name = "factura_pdf.html"
-    def get(self, request):
-        compra = request.session.get("ultima_compra")
-        if not compra:
-            return HttpResponseRedirect("/")
-        # Importar WeasyPrint aquí para evitar que el servidor falle si faltan dependencias
-        try:
-            from weasyprint import HTML
-        except Exception as e:
-            messages.error(request, "Generación de PDF no disponible: faltan dependencias de WeasyPrint.")
-            # Mantener al usuario en la página de gracias para que vea el mensaje
-            return redirect("pedido:gracias")
-
-        html = render_to_string(self.template_name, {"compra": compra})
-        pdf = HTML(string=html, base_url=request.build_absolute_uri("/")).write_pdf()
-        resp = HttpResponse(pdf, content_type="application/pdf")
-        resp["Content-Disposition"] = f'attachment; filename="factura_{compra["numero"]}.pdf"'
-        return resp
-
 
 class FacturaHTMLView(TemplateView):
     """Fallback imprimible en HTML para guardar como PDF desde el navegador."""
