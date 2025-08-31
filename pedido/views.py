@@ -4,10 +4,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
+from .forms import FormularioFacturacion, FormularioEnvio, FormularioPago
 
 from .models import Carrito, ItemCarrito
 from producto.models import Producto
 
+# Autor: Luis Angel Nerio   
 
 class CarritoMixin(LoginRequiredMixin):
     """Mixin para obtener/crear el carrito del usuario."""
@@ -88,3 +90,25 @@ class RemoverDelCarritoView(CarritoMixin, View):
 
     def get(self, request, item_id, *args, **kwargs):
         return self.post(request, item_id, *args, **kwargs)
+
+# Autor: Luis Angel Nerio   
+
+class CheckoutView(LoginRequiredMixin, TemplateView):
+    """GET: muestra el formulario de checkout (facturación, envío y pago)."""
+    template_name = "checkout.html"
+
+    def get_carrito(self):
+        carrito, _ = Carrito.objects.get_or_create(usuario=self.request.user)
+        return carrito
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        carrito = self.get_carrito()
+        ctx.update({
+            "form_facturacion": FormularioFacturacion(),
+            "form_envio": FormularioEnvio(),
+            "form_pago": FormularioPago(),
+            "items": getattr(carrito, "itemcarrito_set", []).all() if hasattr(carrito, "itemcarrito_set") else [],
+            "total": carrito.obtener_total() if hasattr(carrito, "obtener_total") else 0,
+        })
+        return ctx

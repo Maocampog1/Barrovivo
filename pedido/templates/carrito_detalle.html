@@ -92,8 +92,9 @@
           <span class="fw-semibold">${{ total|intcomma }}</span>
         </div>
 
-        <!-- Cuando tengas el checkout, quita 'disabled' y pon href al url correspondiente -->
-        <a class="btn btn-bv w-100 py-2 disabled" aria-disabled="true">Ir a pagar</a>
+  {% if items %}
+  <a class="btn btn-bv w-100 py-2" href="{% url 'pedido:checkout' %}">Ir a pagar</a>
+  {% endif %}
       </div>
     </div>
   </div>
