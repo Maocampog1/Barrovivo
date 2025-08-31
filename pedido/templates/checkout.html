@@ -4,31 +4,46 @@
 
 {% block content %}
 <div class="container py-4">
-  <div class="row g-4">
 
-    <!-- Columna izquierda: Facturación + Envío -->
-    <div class="col-12 col-lg-7">
-      <h5 class="mb-3">Detalles de Facturación</h5>
-      <div class="border rounded-3 p-3 mb-4">
-        <form id="form-checkout" method="post" action="">
-          {% csrf_token %}
+  <form id="form-checkout" method="post" action="{% url 'pedido:checkout' %}">
+    {% csrf_token %}
+
+    {# Mensaje general si algún formulario trae errores #}
+    {% if form_facturacion.errors or form_envio.errors or form_pago.errors %}
+      <div class="alert alert-warning mb-4">
+        Revisa los campos marcados en rojo.
+      </div>
+    {% endif %}
+
+    <div class="row g-4">
+
+      <!-- Columna izquierda: Facturación + Envío -->
+      <div class="col-12 col-lg-7">
+        <h5 class="mb-3">Detalles de Facturación</h5>
+        <div class="border rounded-3 p-3 mb-4">
           <div class="mb-3">
-            {{ form_facturacion.correo.label_tag }} 
+            {{ form_facturacion.correo.label_tag }}
             {{ form_facturacion.correo }}
+            <div class="text-danger small">{{ form_facturacion.correo.errors }}</div>
           </div>
+
           <div class="row g-3">
             <div class="col-md-6">
               {{ form_facturacion.nombres.label_tag }}
               {{ form_facturacion.nombres }}
+              <div class="text-danger small">{{ form_facturacion.nombres.errors }}</div>
             </div>
             <div class="col-md-6">
               {{ form_facturacion.apellidos.label_tag }}
               {{ form_facturacion.apellidos }}
+              <div class="text-danger small">{{ form_facturacion.apellidos.errors }}</div>
             </div>
           </div>
+
           <div class="mt-3">
             {{ form_facturacion.cedula.label_tag }}
             {{ form_facturacion.cedula }}
+            <div class="text-danger small">{{ form_facturacion.cedula.errors }}</div>
           </div>
 
           <h5 class="mt-4 mb-3">Detalles de Envío</h5>
@@ -36,94 +51,105 @@
             <div class="col-md-6">
               {{ form_envio.departamento.label_tag }}
               {{ form_envio.departamento }}
+              <div class="text-danger small">{{ form_envio.departamento.errors }}</div>
             </div>
             <div class="col-md-6">
               {{ form_envio.municipio.label_tag }}
               {{ form_envio.municipio }}
+              <div class="text-danger small">{{ form_envio.municipio.errors }}</div>
             </div>
             <div class="col-12">
               {{ form_envio.direccion.label_tag }}
               {{ form_envio.direccion }}
+              <div class="text-danger small">{{ form_envio.direccion.errors }}</div>
             </div>
             <div class="col-12">
               {{ form_envio.apto_info.label_tag }}
               {{ form_envio.apto_info }}
+              <div class="text-danger small">{{ form_envio.apto_info.errors }}</div>
             </div>
             <div class="col-12 col-md-6">
               {{ form_envio.telefono.label_tag }}
               {{ form_envio.telefono }}
+              <div class="text-danger small">{{ form_envio.telefono.errors }}</div>
             </div>
           </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Columna derecha: Pago + Resumen -->
-    <div class="col-12 col-lg-5">
-      <h5 class="mb-3">Pago</h5>
-      <div class="border rounded-3 p-3">
-        <div class="mb-2">{{ form_pago.metodo.label }}</div>
-        <div class="mb-2">
-          {{ form_pago.metodo }}
         </div>
-
-        <div class="mt-3">
-          {{ form_pago.numero_tarjeta.label_tag }}
-          {{ form_pago.numero_tarjeta }}
-        </div>
-
-        <div class="row g-3 mt-1">
-          <div class="col-7">
-            {{ form_pago.fecha_exp.label_tag }}
-            {{ form_pago.fecha_exp }}
-          </div>
-          <div class="col-5">
-            {{ form_pago.cvc.label_tag }}
-            {{ form_pago.cvc }}
-          </div>
-        </div>
-
-        <div class="mt-3">
-          {{ form_pago.nombre_en_tarjeta.label_tag }}
-          {{ form_pago.nombre_en_tarjeta }}
-        </div>
-
-        <div class="mt-3">
-          {{ form_pago.cedula.label_tag }}
-          {{ form_pago.cedula }}
-        </div>
-
-        <hr class="my-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-muted">Total</span>
-          <strong>${{ total|intcomma }}</strong>
-        </div>
-
-        <!-- El botón por ahora solo está en la UI; en el siguiente paso lo haremos enviar/validar -->
-        <button type="submit" form="form-checkout" class="btn btn-bv w-100">
-          PAGAR
-        </button>
       </div>
 
-      {% if items %}
-        <div class="border rounded-3 p-3 mt-3">
-          <div class="fw-semibold mb-2">Resumen del carrito</div>
-          <ul class="list-unstyled mb-0">
-            {% for item in items %}
-              <li class="d-flex justify-content-between small py-1 border-bottom">
-                <span>{{ item.producto.nombre }} × {{ item.cantidad }}</span>
-                <span>${{ item.subtotal|intcomma }}</span>
+      <!-- Columna derecha: Pago + Resumen -->
+      <div class="col-12 col-lg-5">
+        <h5 class="mb-3">Pago</h5>
+        <div class="border rounded-3 p-3">
+          <div class="mb-2">{{ form_pago.metodo.label }}</div>
+          <div class="mb-2">
+            {{ form_pago.metodo }}
+            <div class="text-danger small">{{ form_pago.metodo.errors }}</div>
+          </div>
+
+          <div class="mt-3">
+            {{ form_pago.numero_tarjeta.label_tag }}
+            {{ form_pago.numero_tarjeta }}
+            <div class="text-danger small">{{ form_pago.numero_tarjeta.errors }}</div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-7">
+              {{ form_pago.fecha_exp.label_tag }}
+              {{ form_pago.fecha_exp }}
+              <div class="text-danger small">{{ form_pago.fecha_exp.errors }}</div>
+            </div>
+            <div class="col-5">
+              {{ form_pago.cvc.label_tag }}
+              {{ form_pago.cvc }}
+              <div class="text-danger small">{{ form_pago.cvc.errors }}</div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            {{ form_pago.nombre_en_tarjeta.label_tag }}
+            {{ form_pago.nombre_en_tarjeta }}
+            <div class="text-danger small">{{ form_pago.nombre_en_tarjeta.errors }}</div>
+          </div>
+
+          <div class="mt-3">
+            {{ form_pago.cedula.label_tag }}
+            {{ form_pago.cedula }}
+            <div class="text-danger small">{{ form_pago.cedula.errors }}</div>
+          </div>
+
+          <hr class="my-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Total</span>
+            <strong>${{ total|intcomma }}</strong>
+          </div>
+
+          <!-- Botón dentro del form -->
+          <button type="submit" class="btn btn-bv btn-bv-cta w-100">
+            Pagar
+          </button>
+        </div>
+
+        {% if items %}
+          <div class="border rounded-3 p-3 mt-3">
+            <div class="fw-semibold mb-2">Resumen del carrito</div>
+            <ul class="list-unstyled mb-0">
+              {% for item in items %}
+                <li class="d-flex justify-content-between small py-1 border-bottom">
+                  <span>{{ item.producto.nombre }} × {{ item.cantidad }}</span>
+                  <span>${{ item.subtotal|intcomma }}</span>
+                </li>
+              {% endfor %}
+              <li class="d-flex justify-content-between mt-2">
+                <span class="fw-semibold">Total</span>
+                <span class="fw-semibold">${{ total|intcomma }}</span>
               </li>
-            {% endfor %}
-            <li class="d-flex justify-content-between mt-2">
-              <span class="fw-semibold">Total</span>
-              <span class="fw-semibold">${{ total|intcomma }}</span>
-            </li>
-          </ul>
-        </div>
-      {% endif %}
-    </div>
+            </ul>
+          </div>
+        {% endif %}
+      </div>
 
-  </div>
+    </div>
+  </form>
 </div>
 {% endblock %}

@@ -93,7 +93,9 @@
         </div>
 
   {% if items %}
-  <a class="btn btn-bv w-100 py-2" href="{% url 'pedido:checkout' %}">Ir a pagar</a>
+<a href="{% url 'pedido:checkout' %}" class="btn btn-bv btn-bv-cta w-100">
+  Ir a pagar
+</a>
   {% endif %}
       </div>
     </div>

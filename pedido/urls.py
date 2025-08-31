@@ -5,6 +5,9 @@ from .views import (
     ActualizarCantidadView,
     RemoverDelCarritoView,
     CheckoutView,
+    GraciasView,
+    FacturaPDFView,
+    FacturaHTMLView
 )
 
 app_name = "pedido"
@@ -19,4 +22,7 @@ urlpatterns = [
     path("actualizar/<int:item_id>/", ActualizarCantidadView.as_view(), name="actualizar_cantidad"),
     path("remover/<int:item_id>/", RemoverDelCarritoView.as_view(), name="remover_del_carrito"),
     path("checkout/", CheckoutView.as_view(), name="checkout"),
+    path("gracias/", GraciasView.as_view(), name="gracias"),
+    path("factura.pdf", FacturaPDFView.as_view(), name="factura_pdf"),
+    path("factura/", FacturaHTMLView.as_view(), name="factura_html"),
 ]
