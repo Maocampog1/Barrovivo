@@ -1,4 +1,4 @@
-# BARROVIVO — Guía rápida
+# BARROVIVO 
 
 Proyecto 1 Arquitectura de Software.
 
