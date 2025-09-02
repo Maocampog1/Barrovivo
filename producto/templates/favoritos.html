@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<style>
+  /* Grid consistente para header y filas (desktop) */
+  @media (min-width: 992px){
+    .favoritos-grid{
+      display: grid;
+      grid-template-columns: 180px 1fr 160px 240px; /* Img | Nombre | Precio | Acciones */
+      column-gap: .75rem;
+      align-items: center;
+    }
+    .favoritos-header{
+      color:#6c757d;
+      font-size:.875rem;
+      padding-left:.75rem;
+      margin-bottom:.5rem;
+    }
+    .favoritos-row{
+      border:1px solid rgba(0,0,0,.12);
+      border-radius:12px;
+      padding:1rem;
+      margin-bottom:1rem;
+      background:#fff;
+    }
+  }
+  /* En móviles apilamos */
+  @media (max-width: 991.98px){
+    .favoritos-row{
+      border:1px solid rgba(0,0,0,.12);
+      border-radius:12px;
+      padding:1rem;
+      margin-bottom:1rem;
+      background:#fff;
+    }
+  }
+  .favoritos-img{
+    max-height:120px; object-fit:contain;
+  }
+</style>
+
+<div class="container py-4">
+  <h4 class="mb-3">Mis Favoritos</h4>
+
+  {% if productos %}
+    <!-- Encabezado (muestra sólo en desktop) -->
+    <div class="favoritos-grid favoritos-header d-none d-lg-grid">
+      <div></div>
+      <div>Nombre Producto</div>
+      <div>Precio</div>
+      <div></div>
+    </div>
+
+    <!-- Filas -->
+    {% for p in productos %}
+      <div class="favoritos-row favoritos-grid">
+        <!-- Col 1: Imagen -->
+        <div>
+          <a href="{% url 'producto:detalle' p.pk %}">
+            {% if p.imagen %}
+              <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}" class="img-fluid rounded favoritos-img">
+            {% else %}
+              <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:120px;">
+                <span class="text-muted small">Sin imagen</span>
+              </div>
+            {% endif %}
+          </a>
+        </div>
+
+        <!-- Col 2: Nombre + descripción -->
+        <div>
+          <a href="{% url 'producto:detalle' p.pk %}" class="text-decoration-none text-dark">
+            <div class="fw-semibold mb-1" style="line-height:1.25">{{ p.nombre }}</div>
+          </a>
+          {% if p.descripcion %}
+            <div class="text-muted small">{{ p.descripcion|truncatewords:22 }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Col 3: Precio (alineado a la derecha) -->
+        <div class="text-lg-end fw-semibold">
+          ${{ p.precio|floatformat:0|intcomma }}
+        </div>
+
+        <!-- Col 4: Acciones -->
+        <div>
+          <div class="d-flex flex-column flex-lg-row gap-2 justify-content-lg-end">
+            <!-- Añadir al carrito -->
+            <form method="post" action="{% url 'pedido:agregar_al_carrito' p.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="cantidad" value="1">
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button type="submit" class="btn btn-bv btn-sm w-100">
+                <i class="bi bi-cart-plus me-1"></i> Añadir al carrito
+              </button>
+            </form>
+
+            <!-- Eliminar de favoritos -->
+            <form method="post" action="{% url 'producto:toggle_favorito' p.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button type="submit" class="btn btn-outline-secondary btn-sm w-100">
+                <i class="bi bi-heartbreak me-1"></i> Eliminar de Favoritos
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  {% else %}
+    <!-- Estado vacío -->
+    <div class="text-center py-5">
+      <i class="bi bi-heart" style="font-size:4rem; color:#ccc;"></i>
+      <h5 class="mt-3">No tienes favoritos</h5>
+      <p class="text-muted">Agrega algunos productos a tus favoritos para verlos aquí.</p>
+      <a href="{% url 'producto:inicio' %}" class="btn btn-bv">Ver productos</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

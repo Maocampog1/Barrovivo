@@ -134,6 +134,8 @@
   --bs-btn-active-border-color:#c9562c;
 }
 
+
+
 /* Checkboxes / radios en naranja */
 .form-check-input{
   accent-color:#EF6E3A;               /* soporte moderno */
@@ -226,3 +228,184 @@ input[type="password"]::-webkit-contacts-auto-fill-button{
 /* Título y layout */
 .login-wrap .lado-logo{ background:#FEF8EC; }
 .titulo-registro{ text-align:center; font-weight:600; margin-bottom:1.25rem; }
+
+/* ===== Sistema de Notificaciones/Mensajes ===== */
+.messages-container {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  z-index: 1050;
+  max-width: 400px;
+  width: 100%;
+}
+
+.alert {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 10px;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.alert-error {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  color: white;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  color: #212529;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #17a2b8, #6f42c1);
+  color: white;
+}
+
+.alert .btn-close {
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+.alert .btn-close:hover {
+  opacity: 1;
+}
+
+/* Animación de entrada */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animación de salida */
+.alert.fade {
+  animation: slideOutRight 0.3s ease-in;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .messages-container {
+    top: 80px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .producto-nombre {
+    font-size: 1rem;
+  }
+  
+  .producto-precio {
+    font-size: 1.1rem;
+  }
+}
+
+/* ===== Botones de Favoritos ===== */
+.btn-favorito {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.btn-favorito:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #dc3545;
+  text-decoration: none;
+}
+
+.btn-favorito.favorito-activo {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+}
+
+.btn-favorito.favorito-activo:hover {
+  background: rgba(220, 53, 69, 1);
+  color: white;
+}
+
+.btn-favorito i {
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-favorito:hover i {
+  transform: scale(1.1);
+}
+
+/* Botón de favoritos más grande para el detalle del producto */
+.btn-favorito-lg {
+  width: 44px;
+  height: 44px;
+}
+
+.btn-favorito-lg i {
+  font-size: 1.3rem;
+}
+
+/* Asegurar que el botón de favoritos esté por encima del stretched-link */
+.favorito-btn {
+  z-index: 10;
+}
+
+.favorito-btn form {
+  margin: 0;
+}
+
+/* Animación de pulso para el corazón */
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.btn-favorito.favorito-activo i {
+  animation: heartBeat 1.3s ease-in-out;
+}

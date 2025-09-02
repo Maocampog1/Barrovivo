@@ -11,7 +11,7 @@ from django.contrib import messages
 from .forms import CrearCuentaForm
 
 
-from producto.models import Producto, Categoria
+from producto.models import Producto, Categoria, Favorito
 
 class InicioView(TemplateView):
     """Home: lista de productos con filtros por categoría y precio."""
@@ -48,6 +48,15 @@ class InicioView(TemplateView):
         # Ordenamiento (placeholder: no implementado todavía)
         # dejamos un order_by por nombre para consistencia
         qs = qs.order_by("nombre")
+
+        # Marcar favoritos para el usuario autenticado (para pintar el corazón en el catálogo)
+        if self.request.user.is_authenticated:
+            fav_ids = set(
+                Favorito.objects.filter(usuario=self.request.user)
+                .values_list("producto_id", flat=True)
+            )
+            for p in qs:
+                p.es_favorito = p.id in fav_ids
 
         # --- Contexto para template ---
         ctx["productos"] = qs

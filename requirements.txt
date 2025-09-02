@@ -1,1 +1,2 @@
 pillow
+weasyprint==61.2
