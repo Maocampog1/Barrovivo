@@ -409,3 +409,25 @@ input[type="password"]::-webkit-contacts-auto-fill-button{
 .btn-favorito.favorito-activo i {
   animation: heartBeat 1.3s ease-in-out;
 }
+
+.btn-bv {
+  background: #EF6E3A;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-bv:hover {
+  background: #d85d2e;
+  color: white;
+}
+
+.btn-bv-cta {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}

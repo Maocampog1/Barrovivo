@@ -1,0 +1,47 @@
+<!--Realizado por camilo salazar-->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Perfil -->
+  <h3 class="fw-bold mb-4">Perfil</h3>
+  <p><strong>Nombre:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+  <p><strong>Correo:</strong> {{ user.email }}</p>
+
+  <!-- Pedidos -->
+  <h4 class="fw-bold mt-5 mb-3">Pedidos</h4>
+  {% if pedidos %}
+    <div class="row g-4">
+      {% for pedido in pedidos %}
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100" style="background:#FFF7ED;">
+            {% for item in pedido.items.all %}                      
+              <div class="card-body text-center d-flex flex-column align-items-center justify-content-between">
+                <img src="{{ item.producto.imagen.url }}" 
+                     alt="{{ item.producto.nombre }}" 
+                     class="rounded mb-3"
+                     style="width:100px;height:100px;object-fit:cover;">
+                <h6 class="fw-semibold mb-3">{{ item.producto.nombre }}</h6>
+                
+              </div>
+                   
+            {% endfor %}
+            <div class="text-center mb-3">
+              <a href="{% url 'pedido:factura_html' pedido.id %}" 
+                class="btn btn-bv btn-bv-cta px-3">
+                Descargar tu factura
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No tienes pedidos todavía.</p>
+  {% endif %}
+
+</div>
+{% endblock %}
