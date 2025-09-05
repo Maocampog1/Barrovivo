@@ -38,3 +38,32 @@ class ItemCarrito(models.Model):
     def subtotal(self):
         """Calcula el subtotal de este item."""
         return self.producto.precio * self.cantidad
+    
+
+class Pedido(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha = models.DateTimeField(auto_now_add=True)
+    nombre_cliente = models.CharField(max_length=200)
+    cedula = models.CharField(max_length=20)
+    celular = models.CharField(max_length=20)
+    correo = models.EmailField()
+    departamento = models.CharField(max_length=100)
+    municipio = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=255)
+    apto_info = models.CharField(max_length=100, blank=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    
+    def __str__(self):
+        return f"Pedido {self.id} de {self.usuario.username}"
+    
+
+
+class PedidoItem(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='items')
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.producto.nombre} x{self.cantidad}"

@@ -1,10 +1,12 @@
 {# pedido/templates/pedido/factura_html.html #}
+
 {% load humanize static %}
+{% load humanize pedido_extras %}
 <!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Factura {{ compra.numero }}</title>
+<title>Factura {{ pedido.id }}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 {# Enlaza tu tema para heredar naranja, inputs, etc. #}
@@ -43,8 +45,8 @@
       <div class="gris">BARROVIVO</div>
     </div>
     <div class="text-end">
-      <span class="banda">{{ compra.numero }}</span>
-      <div class="gris mt-1">{{ compra.creado }}</div>
+      <span class="banda">{{ pedido.id }}</span>
+      <div class="gris mt-1">{{ pedido.fecha }}</div>
     </div>
   </div>
 
@@ -52,17 +54,17 @@
     <div class="col-md-6">
       <div class="p-3 border rounded-3 h-100">
         <h6 class="mb-2">Información de facturación</h6>
-        <div>Cliente: {{ compra.facturacion.nombres }} {{ compra.facturacion.apellidos }}</div>
-        <div>Cédula: {{ compra.facturacion.cedula }}</div>
-        <div>Celular: {{ compra.facturacion.telefono }}</div>
-        <div>Correo: {{ compra.facturacion.correo }}</div>
+        <div>Cliente: {{ pedido.nombre_cliente }}</div>
+        <div>Cédula: {{ pedido.cedula }}</div>
+        <div>Celular: {{ pedido.celular }}</div>
+        <div>Correo: {{ pedido.correo }}</div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="p-3 border rounded-3 h-100">
         <h6 class="mb-2">Detalles de envío</h6>
-        <div>Departamento/Municipio: {{ compra.envio.departamento }} / {{ compra.envio.municipio }}</div>
-        <div>Dirección: {{ compra.envio.direccion }} {{ compra.envio.apto_info }}</div>
+        <div>Departamento/Municipio: {{ pedido.departamento }} / {{ pedido.municipio }}</div>
+        <div>Dirección: {{ pedido.direccion }} {{ pedido.apto_info }}</div>
       </div>
     </div>
   </div>
@@ -78,20 +80,21 @@
         </tr>
       </thead>
       <tbody>
-        {# OJO: aquí usas compra.lineas; si en tu vista guardaste "items", cámbialo a compra.items #}
-        {% for it in compra.lineas %}
-        <tr>
-          <td>{{ it.nombre }}</td>
-          <td class="text-end">{{ it.cantidad }}</td>
-          <td class="text-end">${{ it.precio_unitario|intcomma }}</td>
-          <td class="text-end">${{ it.subtotal|intcomma }}</td>
-        </tr>
+
+       {% for it in itemsPedido %}
+          <tr>
+            <td>{{ it.producto.nombre }}</td>
+            <td class="text-end">{{ it.cantidad }}</td>
+            <td class="text-end">${{ it.precio|intcomma }}</td>
+            <td class="text-end">${{ it.cantidad|mul:it.precio|intcomma }}</td>
+          </tr>
         {% endfor %}
+
       </tbody>
       <tfoot>
         <tr>
           <td colspan="3" class="text-end fw-bold">TOTAL:</td>
-          <td class="text-end fw-bold">${{ compra.total|intcomma }}</td>
+          <td class="text-end fw-bold">${{ pedido.total|intcomma }}</td>
         </tr>
       </tfoot>
     </table>

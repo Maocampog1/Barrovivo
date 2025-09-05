@@ -1,4 +1,5 @@
 # Autor: Maria Alejandra Ocampo
+# Editado: Camilo Salazr
 from decimal import Decimal, InvalidOperation
 
 from django.views.generic import TemplateView
@@ -9,6 +10,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from django.contrib import messages
 from .forms import CrearCuentaForm
+from pedido.models import Pedido
 
 
 from producto.models import Producto, Categoria, Favorito
@@ -86,6 +88,12 @@ class PerfilView(LoginRequiredMixin, TemplateView):
     """Página de perfil (solo autenticados)."""
     template_name = 'perfil.html'
     login_url = reverse_lazy('usuario:login')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        pedidos = Pedido.objects.filter(usuario=self.request.user).order_by('-fecha')
+        ctx["pedidos"] = pedidos
+        return ctx
 
 
 class CrearCuentaView(FormView):
