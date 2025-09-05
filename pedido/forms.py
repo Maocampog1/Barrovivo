@@ -7,7 +7,7 @@ METODOS_PAGO = (
 )
 
 class FormularioFacturacion(forms.Form):
-    """Datos de facturación del cliente."""
+    #Datos de facturación del cliente.
     correo = forms.EmailField(label="Dirección correo electrónico*", widget=forms.EmailInput(attrs={
         "placeholder": "correo@dominio.com", "class": "form-control"
     }))
@@ -23,7 +23,7 @@ class FormularioFacturacion(forms.Form):
 
 
 class FormularioEnvio(forms.Form):
-    """Dirección de envío."""
+    #Dirección de envío.
     departamento = forms.CharField(label="Departamento*", max_length=120, widget=forms.TextInput(attrs={
         "class": "form-control"
     }))
@@ -45,7 +45,7 @@ class FormularioEnvio(forms.Form):
 
 
 class FormularioPago(forms.Form):
-    """Solo simulación de pago (no procesa tarjetas reales)."""
+    #Solo simulación de pago (no procesa tarjetas reales).
     metodo = forms.ChoiceField(label="Selecciona método de pago*", choices=METODOS_PAGO, widget=forms.RadioSelect)
     numero_tarjeta = forms.CharField(label="Número de tarjeta*", max_length=19, widget=forms.TextInput(attrs={
         "class": "form-control", "placeholder": "1111 2222 3333 4444"

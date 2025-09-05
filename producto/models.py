@@ -60,9 +60,10 @@ class Producto(models.Model):
         self.cantidad_disp += cantidad
         self.save(update_fields=["cantidad_disp"])
 
+# Autor: Luis Angel Nerio
 
 class Favorito(models.Model):
-    """Modelo para los productos favoritos de los usuarios."""
+    #Modelo para los productos favoritos de los usuarios.
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favoritos")
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="favoritos")
     fecha_agregado = models.DateTimeField(auto_now_add=True)

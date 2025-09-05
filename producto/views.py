@@ -75,6 +75,8 @@ class ProductoDetalleView(DetailView):
             "es_favorito": es_favorito,
         })
         return ctx
+    
+#Autor: Luis Angel Nerio
 
 
 class ToggleFavoritoView(LoginRequiredMixin, View):

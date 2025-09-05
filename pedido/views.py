@@ -17,15 +17,15 @@ from producto.models import Producto
 # Autor: Luis Angel Nerio   
 
 class CarritoMixin(LoginRequiredMixin):
-    """Mixin para obtener/crear el carrito del usuario."""
+    #Mixin para obtener/crear el carrito del usuario.
     def get_carrito(self):
         carrito, _ = Carrito.objects.get_or_create(usuario=self.request.user)
         return carrito
 
 
 class CarritoDetalleView(CarritoMixin, TemplateView):
-    """Vista para mostrar el detalle del carrito de compras."""
-    template_name = "carrito_detalle.html"   # ajusta si tu template vive en otra carpeta
+    # Vista para mostrar el detalle del carrito de compras.
+    template_name = "carrito_detalle.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -37,7 +37,7 @@ class CarritoDetalleView(CarritoMixin, TemplateView):
 
 
 class AgregarAlCarritoView(CarritoMixin, View):
-    """POST: agregar un producto al carrito."""
+    #POST: agregar un producto al carrito.
     def post(self, request, producto_id, *args, **kwargs):
         producto = get_object_or_404(Producto, id=producto_id)
         cantidad = int(request.POST.get("cantidad", 1))
@@ -65,7 +65,7 @@ class AgregarAlCarritoView(CarritoMixin, View):
 
 
 class ActualizarCantidadView(CarritoMixin, View):
-    """POST: actualizar la cantidad de un item."""
+    #POST: actualizar la cantidad de un item.
     def post(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
         nueva = int(request.POST.get("cantidad", 1))
@@ -98,23 +98,23 @@ class RemoverDelCarritoView(CarritoMixin, View):
 
 
 class CheckoutView(TemplateView):
-    """
-    Página de checkout:
-    - GET: muestra formularios + resumen del carrito
-    - POST: valida, guarda la compra en sesión, vacía el carrito y redirige a /pedido/gracias/
-    """
+
+    # Página de checkout:
+    # - GET: muestra formularios + resumen del carrito
+    # - POST: valida, guarda la compra en sesión, vacía el carrito y redirige a /pedido/gracias/
+
     template_name = "checkout.html"
 
-    # --- helpers ---
+    
     def get_carrito(self):
         carrito, _ = Carrito.objects.get_or_create(usuario=self.request.user)
         return carrito
 
     def _items_carrito(self, carrito):
-        """Trae los ítems sin depender de la relación inversa (evita itemcarrito_set)."""
+        #Trae los ítems sin depender de la relación inversa (evita itemcarrito_set).
         return ItemCarrito.objects.filter(carrito=carrito)
 
-    # --- GET ---
+    
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         carrito = self.get_carrito()
@@ -145,7 +145,7 @@ class CheckoutView(TemplateView):
                 "total": carrito.obtener_total(),
             })
 
-        # Pago simulado OK → construir "compra" desde el carrito y guardar en sesión
+        
         carrito = self.get_carrito()
         items_qs = self._items_carrito(carrito)
 
@@ -155,7 +155,7 @@ class CheckoutView(TemplateView):
         lineas = []
         for it in items_qs:
             precio_unit = getattr(it, "precio_unitario", getattr(it.producto, "precio", 0))
-            # Usar método subtotal() solo si es callable; si es un campo Decimal, tómalo directo; si no, calcula
+           
             _subtotal_attr = getattr(it, "subtotal", None)
             if callable(_subtotal_attr):
                 subtotal = _subtotal_attr()
@@ -177,7 +177,7 @@ class CheckoutView(TemplateView):
             computed_total = 0
 
         compra = {
-            "numero": timezone.now().strftime("%y%m%d%H%M%S"),   # consecutivo simple
+            "numero": timezone.now().strftime("%y%m%d%H%M%S"),   
             "creado": timezone.now().strftime("%d/%m/%Y"),
             "total": _to_float(computed_total),
             "facturacion": {
@@ -204,13 +204,13 @@ class CheckoutView(TemplateView):
         request.session["ultima_compra"] = compra
         request.session.modified = True
 
-        # Si tu modelo Carrito tiene .vaciar(), úsalo. Si no, borra los ítems manualmente.
+       
         if hasattr(carrito, "vaciar"):
             carrito.vaciar()
         else:
             self._items_carrito(carrito).delete()
 
-        # Redirigir a /pedido/gracias/
+       
         return redirect("pedido:gracias")
 
 
@@ -225,7 +225,7 @@ class GraciasView(TemplateView):
         ctx["compra"] = self.request.session.get("ultima_compra", {})
         # Detectar si la generación de PDF está disponible en este entorno
         try:
-            from weasyprint import HTML  # noqa: F401
+            from weasyprint import HTML  
             ctx["pdf_disponible"] = True
         except Exception:
             ctx["pdf_disponible"] = False
@@ -234,7 +234,7 @@ class GraciasView(TemplateView):
 
 
 class FacturaHTMLView(TemplateView):
-    """Fallback imprimible en HTML para guardar como PDF desde el navegador."""
+    #Fallback imprimible en HTML para guardar como PDF desde el navegador.
     template_name = "factura_html.html"
 
     def get(self, request, *args, **kwargs):
