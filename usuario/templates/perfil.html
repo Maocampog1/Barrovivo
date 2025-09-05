@@ -7,12 +7,12 @@
 <div class="container py-5">
 
   <!-- Perfil -->
-  <h3 class="fw-bold mb-4">Perfil</h3>
+  <h3 class="mb-2 fw-semibold">Perfil</h3>
   <p><strong>Nombre:</strong> {{ user.first_name }} {{ user.last_name }}</p>
   <p><strong>Correo:</strong> {{ user.email }}</p>
 
   <!-- Pedidos -->
-  <h4 class="fw-bold mt-5 mb-3">Pedidos</h4>
+  <h4 class="mb-2 fw-semibold">Pedidos</h4>
   {% if pedidos %}
     <div class="row g-4">
       {% for pedido in pedidos %}
