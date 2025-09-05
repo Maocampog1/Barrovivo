@@ -1,51 +1,103 @@
-# BARROVIVO 
 
-Proyecto 1 Arquitectura de Software.
+# BARROVIVO
 
-## 1) Requisitos
+Proyecto 1 – Arquitectura de Software.  
 
-* Python 3.10+ (recomendado 3.11)
+
+---
+
+## 1) Clonar el repositorio
+
+Abre una terminal y clona el proyecto en tu PC:  
+
+```bash
+git clone https://github.com/Maocampog1/Barrovivo.git
+cd Barrovivo
+````
+
+---
+
+## 2) Requisitos
+
+* Python **3.10+** (recomendado **3.11**)
 * Pip instalado
 
-## 2) Instalar dependencias
+Verifica versión de Python y pip:
 
-Instala directamente en tu sistema (sin entorno virtual):
+```bash
+python --version
+pip --version
+```
+
+---
+
+## 3) Instalar dependencias
+
+Instala directamente en tu sistema (puedes usar entorno virtual si prefieres):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Si falta Django:
+Si falta Django o alguna librería:
 
 ```bash
 pip install "Django>=5,<6" pillow weasyprint==61.2
 ```
 
-## 3) Preparar carpetas
+---
 
-Asegúrate de tener:
+## 4) Preparar carpetas
 
-* `static/` (ya existe)
-* `multimedia/` (créala si no está) con `logo.png` adentro.
+Asegúrate de que existan estas carpetas:
 
-## 4) Migraciones y superusuario
+* `static/` → ya viene incluida en el repo.
+* `multimedia/` → créala si no existe, y coloca dentro un archivo `logo.png`.
+
+Ejemplo en Linux/Mac:
+
+```bash
+mkdir -p multimedia
+cp ruta/a/tu/logo.png multimedia/logo.png
+```
+
+En Windows crea la carpeta manualmente.
+
+---
+
+## 5) Migraciones y superusuario
+
+Ejecuta las migraciones:
 
 ```bash
 python manage.py migrate
+```
+
+Crea el usuario administrador:
+
+```bash
 python manage.py createsuperuser
 ```
 
-## 5) Ejecutar servidor
+---
+
+## 6) Ejecutar el servidor
+
+Levanta el servidor de desarrollo:
 
 ```bash
 python manage.py runserver
 ```
 
-Entra a: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+Abre en tu navegador:
+[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-## 6 Problemas comunes
+---
 
-* No carga logo → revisa `multimedia/logo.png`.
-* Error con WeasyPrint → instala dependencias del sistema o usa impresión desde navegador.
-* Imágenes de productos no se ven → revisa permisos en `multimedia/`.
+## 7) Problemas comunes
+
+* **No carga el logo** → revisa que exista `multimedia/logo.png`.
+* **Imágenes de productos no se ven** → revisa permisos de lectura/escritura en la carpeta `multimedia/`.
+
+---
 
