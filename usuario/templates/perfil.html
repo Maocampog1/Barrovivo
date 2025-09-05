@@ -17,7 +17,7 @@
     <div class="row g-4">
       {% for pedido in pedidos %}
         <div class="col-12 col-sm-6 col-md-4">
-          <div class="card border-0 shadow-sm rounded-4 h-100" style="background:#FFF7ED;">
+          <div class="card border-0 shadow-sm rounded-4 h-100" style="background:#FEF8EC;">
             {% for item in pedido.items.all %}                      
               <div class="card-body text-center d-flex flex-column align-items-center justify-content-between">
                 <img src="{{ item.producto.imagen.url }}" 
