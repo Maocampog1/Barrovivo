@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize i18n %}
 
 {# Ocultar navbar en login #}
 {% block navbar %}{% endblock %}
@@ -12,33 +13,44 @@
     <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center lado-logo">
       <div class="text-center p-4">
         <img src="{{ MEDIA_URL }}logo.png" alt="BARROVIVO" style="max-height:200px;" class="mb-3">
-        
       </div>
     </div>
 
     <!-- Mitad derecha: formulario -->
     <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center bg-white">
       <div class="w-100 px-4" style="max-width:460px;">
-        <h2 class="text-center fw-semibold mb-4">Ingresa</h2>
+        <h2 class="text-center fw-semibold mb-4">{% trans "Ingresa" %}</h2>
 
         {% if request.GET.next %}
-          <div class="alert alert-warning py-2">Debes iniciar sesión para continuar.</div>
+          <div class="alert alert-warning py-2">{% trans "Debes iniciar sesión para continuar." %}</div>
         {% endif %}
 
         <form method="post" novalidate>
           {% csrf_token %}
           <div class="mb-3">
-            <label class="form-label small fw-semibold">Email*</label>
-            <input type="text" name="username" class="form-control form-control-lg bv-soft"
-                   placeholder="Ingresa tu email" value="{{ form.username.value|default:'' }}">
+            <label class="form-label small fw-semibold">{% trans "Email" %}*</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control form-control-lg bv-soft"
+              placeholder="{% trans 'Ingresa tu email' %}"
+              value="{{ form.username.value|default:'' }}"
+              aria-label="{% trans 'Email' %}"
+            >
           </div>
 
           <div class="mb-4">
-            <label class="form-label small fw-semibold">Contraseña*</label>
+            <label class="form-label small fw-semibold">{% trans "Contraseña" %}*</label>
             <div class="input-group input-group-lg">
-              <input id="id_password" type="password" name="password" class="form-control bv-soft"
-                     placeholder="Ingresa tu contraseña">
-              <button class="btn btn-outline-secondary" type="button" id="btnTogglePwd" aria-label="Mostrar/Ocultar">
+              <input
+                id="id_password"
+                type="password"
+                name="password"
+                class="form-control bv-soft"
+                placeholder="{% trans 'Ingresa tu contraseña' %}"
+                aria-label="{% trans 'Contraseña' %}"
+              >
+              <button class="btn btn-outline-secondary" type="button" id="btnTogglePwd" aria-label="{% trans 'Mostrar/Ocultar' %}">
                 <i class="bi bi-eye"></i>
               </button>
             </div>
@@ -48,18 +60,18 @@
             <div class="text-danger small mb-3">{{ form.non_field_errors.0 }}</div>
           {% endif %}
 
-        <!-- Botón centrado, mismo estilo que 'Crear Cuenta' -->
-        <div class="text-center">
+          <!-- Botón centrado -->
+          <div class="text-center">
             <button class="btn btn-bv btn-lg rounded-pill px-5">
-                Iniciar Sesión
+              {% trans "Iniciar Sesión" %}
             </button>
-        </div>
+          </div>
 
-
-        <div class="text-center mt-3">
-            <a class="text-muted small text-decoration-none" href="{% url 'usuario:registro' %}">Crear una cuenta</a>
-        </div>
-
+          <div class="text-center mt-3">
+            <a class="text-muted small text-decoration-none" href="{% url 'usuario:registro' %}">
+              {% trans "Crear una cuenta" %}
+            </a>
+          </div>
         </form>
       </div>
     </div>
