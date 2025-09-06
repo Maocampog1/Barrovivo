@@ -1,23 +1,23 @@
 {# pedido/templates/pedido/gracias.html #}
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 {% block content %}
 <div class="container py-5">
   <div class="p-5 rounded-4" style="background:#FEF8EC;">
-    <h2 class="text-center mb-2">¡Gracias por tu compra!</h2>
+    <h2 class="text-center mb-2">{% trans "¡Gracias por tu compra!" %}</h2>
 
     <p class="text-center text-muted mb-4">
-      Tu número de pedido es <strong>{{ pedido.id }}</strong><br>
-      En tu perfil puedes verificar tus compras.
+      {% blocktrans with pedido_id=pedido.id %}
+        Tu número de pedido es <strong>{{ pedido_id }}</strong><br>
+        En tu perfil puedes verificar tus compras.
+      {% endblocktrans %}
     </p>
-
- 
 
     <div class="d-flex justify-content-center">
       <a href="{% url 'pedido:factura_html' pedido.id %}"
         class="btn btn-bv btn-bv-cta d-inline-flex align-items-center gap-2"
         style="max-width: 420px;">
-        <span>Ver / Descargar factura</span>
+        <span>{% trans "Ver / Descargar factura" %}</span>
         <i class="bi bi-receipt"></i>
       </a>
     </div>
