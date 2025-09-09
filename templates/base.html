@@ -65,9 +65,12 @@
             <!-- Logout -->
             {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'usuario:logout' %}" title="{% trans 'Salir' %}" aria-label="{% trans 'Salir' %}">
-                  <i class="bi bi-box-arrow-right navbar-icon"></i>
-                </a>
+                <form action="{% url 'usuario:logout' %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-link nav-link" title="{% trans 'Salir' %}" aria-label="{% trans 'Salir' %}">
+                    <i class="bi bi-box-arrow-right navbar-icon"></i>
+                  </button>
+                </form>
               </li>
             {% endif %}
 
