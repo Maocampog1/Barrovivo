@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load humanize %}
 {% load humanize i18n %}
 {% block content %}
 <div class="container py-3">
@@ -9,14 +8,13 @@
     <div class="dropdown">
       <button class="btn btn-outline-secondary btn-filtros dropdown-toggle"
              type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-sliders me-1"></i> Filtrar productos
+        <i class="bi bi-sliders me-1"></i> {% trans "Filtrar productos" %}
       </button>
-
 
       <div class="dropdown-menu p-3" style="min-width: 300px;">
         <form method="get">
           <!-- Categorías -->
-          <div class="mb-2 fw-semibold">Filtrar por Categoría</div>
+          <div class="mb-2 fw-semibold">{% trans "Filtrar por Categoría" %}</div>
           {% for c in categorias %}
             <div class="form-check mb-1">
               <input class="form-check-input" type="checkbox" name="cat"
@@ -25,49 +23,47 @@
               <label class="form-check-label" for="cat_{{ c.id }}">{{ c.nombre }}</label>
             </div>
           {% empty %}
-            <div class="text-muted small">No hay categorías.</div>
+            <div class="text-muted small">{% trans "No hay categorías." %}</div>
           {% endfor %}
 
           <hr class="my-3">
 
           <!-- Precio -->
-          <div class="mb-2 fw-semibold">Filtrar por precio</div>
+          <div class="mb-2 fw-semibold">{% trans "Filtrar por precio" %}</div>
           <div class="input-group input-group-sm mb-2">
             <span class="input-group-text">$</span>
             <input type="number" class="form-control" name="min"
-                   value="{{ precio_min }}" placeholder="Mínimo">
+                   value="{{ precio_min }}" placeholder="{% trans 'Mínimo' %}">
             <span class="input-group-text">-</span>
             <span class="input-group-text">$</span>
             <input type="number" class="form-control" name="max"
-                   value="{{ precio_max }}" placeholder="Máximo">
+                   value="{{ precio_max }}" placeholder="{% trans 'Máximo' %}">
           </div>
 
           <hr class="my-3">
 
-          <!-- Orden (placeholder) -->
-          <div class="mb-2 fw-semibold">Ordenar por</div>
+          <!-- Orden -->
+          <div class="mb-2 fw-semibold">{% trans "Ordenar por" %}</div>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="orden" id="o_mas"
                    value="mas" {% if orden == 'mas' %}checked{% endif %}>
-            <label class="form-check-label" for="o_mas">Más vendidos (próx.)</label>
+            <label class="form-check-label" for="o_mas">{% trans "Más vendidos (próx.)" %}</label>
           </div>
           <div class="form-check mb-3">
             <input class="form-check-input" type="radio" name="orden" id="o_menos"
                    value="menos" {% if orden == 'menos' %}checked{% endif %}>
-            <label class="form-check-label" for="o_menos">Menos vendidos (próx.)</label>
+            <label class="form-check-label" for="o_menos">{% trans "Menos vendidos (próx.)" %}</label>
           </div>
 
           <!-- Acciones -->
           <div class="d-flex gap-2">
-            <button class="btn btn-primary btn-sm" type="submit">Aplicar</button>
-            <a href="{% url 'usuario:home' %}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+            <button class="btn btn-primary btn-sm" type="submit">{% trans "Aplicar" %}</button>
+            <a href="{% url 'usuario:home' %}" class="btn btn-outline-secondary btn-sm">{% trans "Limpiar" %}</a>
           </div>
         </form>
       </div>
     </div>
   </div>
-
- 
 
   {% include "productos.html" with productos=productos %}
 
