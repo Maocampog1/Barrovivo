@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Carrito, ItemCarrito, Pedido, PedidoItem
 
+# Autor: Luis Angel Nerio
 @admin.register(Carrito)
 class CarritoAdmin(admin.ModelAdmin):
     list_display = ['usuario', 'fecha_creacion', 'fecha_actualizacion', 'obtener_cantidad_total', 'obtener_total']

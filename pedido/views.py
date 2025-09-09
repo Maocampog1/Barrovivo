@@ -29,7 +29,7 @@ class CarritoMixin(LoginRequiredMixin):
 
 class CarritoDetalleView(CarritoMixin, TemplateView):
     """Vista para mostrar el detalle del carrito de compras."""
-    template_name = "carrito_detalle.html"   # ajusta si tu template vive en otra carpeta
+    template_name = "carrito_detalle.html"   
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

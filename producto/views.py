@@ -102,7 +102,7 @@ class ToggleFavoritoView(LoginRequiredMixin, View):
         except Exception:
             return redirect("producto:inicio")
 
-
+#Autor: Luis Angel Nerio
 class FavoritosView(LoginRequiredMixin, ListView):
     """Vista para mostrar los productos favoritos del usuario."""
     template_name = "favoritos.html"

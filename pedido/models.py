@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from producto.models import Producto
 
-# Create your models here.
-
+# Autor: Luis Angel Nerio
 class Carrito(models.Model):
     """Modelo para representar el carrito de compras de un usuario."""
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='carrito')
