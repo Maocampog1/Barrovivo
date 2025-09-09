@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
-
+{% load humanize i18n %}
 {% block content %}
 <div class="container py-3">
 
@@ -67,7 +67,7 @@
     </div>
   </div>
 
-  <h1 class="h4 mb-3">Catálogo</h1>
+ 
 
   {% include "productos.html" with productos=productos %}
 

@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load humanize i18n %}
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
   {% for p in productos %}
@@ -10,13 +10,16 @@
             <form method="post" action="{% url 'producto:toggle_favorito' p.id %}" class="d-inline">
               {% csrf_token %}
               <input type="hidden" name="next" value="{{ request.get_full_path }}">
-              <button type="submit" class="btn-favorito {% if p.es_favorito %}favorito-activo{% endif %}" 
-                      title="{% if p.es_favorito %}Quitar de favoritos{% else %}Agregar a favoritos{% endif %}">
+              <button type="submit"
+                      class="btn-favorito {% if p.es_favorito %}favorito-activo{% endif %}"
+                      title="{% if p.es_favorito %}{% trans 'Quitar de favoritos' %}{% else %}{% trans 'Agregar a favoritos' %}{% endif %}">
                 <i class="bi bi-heart{% if p.es_favorito %}-fill{% endif %}"></i>
               </button>
             </form>
           {% else %}
-            <a href="{% url 'usuario:login' %}?next={{ request.path }}" class="btn-favorito" title="Inicia sesión para agregar a favoritos">
+            <a href="{% url 'usuario:login' %}?next={{ request.path }}"
+               class="btn-favorito"
+               title="{% trans 'Inicia sesión para agregar a favoritos' %}">
               <i class="bi bi-heart"></i>
             </a>
           {% endif %}
@@ -28,10 +31,10 @@
                  style="height:200px;object-fit:contain;">
           {% else %}
             <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
-              <span class="text-muted small">Sin imagen</span>
+              <span class="text-muted small">{% trans "Sin imagen" %}</span>
             </div>
           {% endif %}
-          <div class="hover-hint">Dar clic para comprar</div>
+          <div class="hover-hint">{% trans "Dar clic para comprar" %}</div>
         </div>
 
         <div class="mini-card-info text-center">
@@ -45,7 +48,7 @@
     </div>
   {% empty %}
     <div class="col-12">
-      <div class="alert alert-secondary">No hay productos disponibles por ahora.</div>
+      <div class="alert alert-secondary">{% trans "No hay productos disponibles por ahora." %}</div>
     </div>
   {% endfor %}
 </div>

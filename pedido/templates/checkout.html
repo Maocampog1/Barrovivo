@@ -1,6 +1,6 @@
 {# pedido/templates/pedido/checkout.html #}
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize i18n %}
 
 {% block content %}
 <div class="container py-4">
@@ -11,7 +11,7 @@
     {# Mensaje general si algún formulario trae errores #}
     {% if form_facturacion.errors or form_envio.errors or form_pago.errors %}
       <div class="alert alert-warning mb-4">
-        Revisa los campos marcados en rojo.
+        {% trans "Revisa los campos marcados en rojo." %}
       </div>
     {% endif %}
 
@@ -19,7 +19,7 @@
 
       <!-- Columna izquierda: Facturación + Envío -->
       <div class="col-12 col-lg-7">
-        <h5 class="mb-3">Detalles de Facturación</h5>
+        <h5 class="mb-3">{% trans "Detalles de Facturación" %}</h5>
         <div class="border rounded-3 p-3 mb-4">
           <div class="mb-3">
             {{ form_facturacion.correo.label_tag }}
@@ -46,7 +46,7 @@
             <div class="text-danger small">{{ form_facturacion.cedula.errors }}</div>
           </div>
 
-          <h5 class="mt-4 mb-3">Detalles de Envío</h5>
+          <h5 class="mt-4 mb-3">{% trans "Detalles de Envío" %}</h5>
           <div class="row g-3">
             <div class="col-md-6">
               {{ form_envio.departamento.label_tag }}
@@ -79,7 +79,7 @@
 
       <!-- Columna derecha: Pago + Resumen -->
       <div class="col-12 col-lg-5">
-        <h5 class="mb-3">Pago</h5>
+        <h5 class="mb-3">{% trans "Pago" %}</h5>
         <div class="border rounded-3 p-3">
           <div class="mb-2">{{ form_pago.metodo.label }}</div>
           <div class="mb-2">
@@ -120,19 +120,19 @@
 
           <hr class="my-3">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Total</span>
+            <span class="text-muted">{% trans "Total" %}</span>
             <strong>${{ total|intcomma }}</strong>
           </div>
 
           <!-- Botón dentro del form -->
           <button type="submit" class="btn btn-bv btn-bv-cta w-100">
-            Pagar
+            {% trans "Pagar" %}
           </button>
         </div>
 
         {% if items %}
           <div class="border rounded-3 p-3 mt-3">
-            <div class="fw-semibold mb-2">Resumen del carrito</div>
+            <div class="fw-semibold mb-2">{% trans "Resumen del carrito" %}</div>
             <ul class="list-unstyled mb-0">
               {% for item in items %}
                 <li class="d-flex justify-content-between small py-1 border-bottom">
@@ -141,7 +141,7 @@
                 </li>
               {% endfor %}
               <li class="d-flex justify-content-between mt-2">
-                <span class="fw-semibold">Total</span>
+                <span class="fw-semibold">{% trans "Total" %}</span>
                 <span class="fw-semibold">${{ total|intcomma }}</span>
               </li>
             </ul>
