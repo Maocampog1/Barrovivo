@@ -180,7 +180,7 @@ class CheckoutView(TemplateView):
             messages.warning(request, "Tu carrito está vacío.")
             return redirect("pedido:carrito")
 
-        numero_pedido = now().strftime("%y%m%d%H%M%S")
+        #numero_pedido = now().strftime("%y%m%d%H%M%S")
 #Editado por Camilo Salazar
         with transaction.atomic():
             # Crear Pedido
