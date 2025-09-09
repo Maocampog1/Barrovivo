@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Carrito, ItemCarrito
+from .models import Carrito, ItemCarrito, Pedido, PedidoItem
 
 @admin.register(Carrito)
 class CarritoAdmin(admin.ModelAdmin):
@@ -26,3 +26,27 @@ class ItemCarritoAdmin(admin.ModelAdmin):
     def subtotal(self, obj):
         return f"${obj.subtotal:,}"
     subtotal.short_description = 'Subtotal'
+
+
+# Inline para mostrar los items dentro de Pedido
+class PedidoItemInline(admin.TabularInline):
+    model = PedidoItem
+    extra = 0
+    readonly_fields = ('producto', 'cantidad', 'precio')
+    can_delete = False
+
+
+@admin.register(Pedido)
+class PedidoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'usuario', 'correo', 'fecha',  'total')
+    list_filter = ('fecha', 'departamento', 'municipio')
+    search_fields = ('usuario__username', 'nombre_cliente', 'correo', 'cedula')
+    readonly_fields = ('fecha',)
+    inlines = [PedidoItemInline]
+
+
+@admin.register(PedidoItem)
+class PedidoItemAdmin(admin.ModelAdmin):
+    list_display = ('pedido', 'producto', 'cantidad', 'precio')
+    search_fields = ('producto__nombre',)
+    list_filter = ('pedido__fecha',)
