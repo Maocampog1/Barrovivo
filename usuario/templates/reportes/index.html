@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Reportes de Ventas" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4 text-center">
+          <div class="display-6 mb-2">📊</div>
+          <h1 class="h4 mb-2">{% trans "Reportes de Ventas" %}</h1>
+          <p class="text-muted mb-4">{% trans "Descarga los reportes en el formato que prefieras." %}</p>
+
+          <div class="d-flex justify-content-center gap-2">
+            <a class="btn btn-bv" href="{% url 'usuario:reporte_ventas_pdf' %}">
+              📄 {% trans "Descargar PDF" %}
+            </a>
+            <a class="btn btn-outline-secondary" href="{% url 'usuario:reporte_ventas_excel' %}">
+              📊 {% trans "Descargar Excel" %}
+            </a>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="text-start small text-muted">
+            <ul class="mb-0">
+              <li>{% trans "El PDF está optimizado para imprimir." %}</li>
+              <li>{% trans "El Excel incluye un renglón por ítem con cantidades y precios." %}</li>
+              <li>{% trans "Solo usuarios administradores pueden ver esta página." %}</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
