@@ -42,6 +42,9 @@ from pedido.models import Pedido
 from producto.models import Producto, Categoria, Favorito
 
 
+
+
+
 class InicioView(TemplateView):
     """Home: lista de productos con filtros por categoría, precio y ventas."""
     template_name = "home.html"
