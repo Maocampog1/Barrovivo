@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}Asistente | BarroVivo{% endblock %}
+
+{% block main %}
+<style>
+  /* === Estilos personalizados para el chat === */
+  #bv-chat-messages {
+    height: 350px;
+    overflow-y: auto;
+    background: #fafafa;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .msg-bot {
+    align-self: flex-start;
+    background: #e9f5ff;
+    color: #222;
+    padding: 8px 12px;
+    border-radius: 12px 12px 12px 2px;
+    max-width: 75%;
+  }
+
+  .msg-user {
+    align-self: flex-end;
+    background: #dfffe0;
+    color: #222;
+    padding: 8px 12px;
+    border-radius: 12px 12px 2px 12px;
+    max-width: 75%;
+  }
+
+  #bv-results .card {
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  #bv-results .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  .card-img-top {
+    height: 230px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+  }
+</style>
+
+<div class="container py-4">
+  <h1 class="h4 mb-3 text-center"> Asesor IA BarroVivo</h1>
+  <p class="text-muted text-center mb-4">
+    ¡Hola! Estoy aquí para ayudarte a encontrar la pieza de cerámica perfecta. Cuéntame qué buscas. 
+  </p>
+
+  <!-- Conversación -->
+  <div id="bv-chat-messages" class="d-flex flex-column gap-2 mb-3">
+    <div id="bv-chat-stream" class="d-flex flex-column gap-2 w-100"></div>
+  </div>
+
+  <!-- Campo de texto y botón -->
+  <form id="bv-chat-form" class="row g-2">
+    <div class="col-12 col-md-9">
+      <input id="bv-chat-input" type="text" class="form-control shadow-sm"
+             placeholder="Ej.: Matera amarilla para mi abuela" autocomplete="off">
+    </div>
+    <div class="col-12 col-md-3 d-grid">
+      <button class="btn btn-bv shadow-sm">Enviar</button>
+    </div>
+  </form>
+
+  <!-- Resultados -->
+  <div id="bv-results" class="mt-5"></div>
+</div>
+
+<script>
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(text) n.textContent = text;
+  return n;
+}
+
+function pushMsg(container, text, who="bot"){
+  const b = el("div", who==="bot" ? "msg-bot" : "msg-user");
+  b.textContent = text;
+  container.appendChild(b);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function callChatAPI(message){
+  const r = await fetch("{% url 'usuario:chat_api' %}", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({message})
+  });
+  return await r.json();
+}
+
+(function init(){
+  const form = document.getElementById("bv-chat-form");
+  const input = document.getElementById("bv-chat-input");
+  const stream = document.getElementById("bv-chat-stream");
+  const results = document.getElementById("bv-results");
+
+  // Mensaje inicial
+  pushMsg(stream, "¡Bienvenido!  Estoy aquí para ayudarte a encontrar la pieza de cerámica perfecta. Cuéntame qué buscas.");
+
+  form.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const text = (input.value || "").trim(); 
+    if(!text) return;
+
+    pushMsg(stream, text, "user"); 
+    input.value = ""; 
+
+    const thinking = el("div","msg-bot","Pensando… ");
+    stream.appendChild(thinking);
+
+    try{
+      const data = await callChatAPI(text);
+      thinking.remove();
+
+      if(!data.ok){
+        pushMsg(stream, `No pude conectarme. ${data.error ? "Error: "+data.error : "Intenta de nuevo."}`);
+        return;
+      }
+
+      // Respuesta del asistente
+      pushMsg(stream, data.text || "Listo. 💫");
+
+      // Mostrar productos con IMAGEN
+      results.innerHTML = "";
+      if(Array.isArray(data.products) && data.products.length){
+        const row = el("div","row g-4");
+
+        data.products.forEach(p=>{
+          const col = el("div","col-12 col-md-6 col-lg-4");
+          const card = el("div","card h-100 border-0 shadow-sm");
+
+          // Imagen completa y recortada
+          if (p.imagen) {
+            const img = el("img","card-img-top");
+            img.src = p.imagen;
+            img.alt = p.nombre || "Producto";
+            card.appendChild(img);
+          }
+
+          const body = el("div","card-body");
+          const h5 = el("h5","card-title text-center fw-bold", p.nombre);
+          const price = el("div","text-muted text-center mb-2","$"+Math.round(p.precio).toLocaleString());
+          const note = el("p","card-text small text-center",(p.nota || ""));
+          const a = el("a","btn btn-sm btn-bv d-block mx-auto mt-2","Ver detalle");
+          a.href = `/producto/${p.id}/`;
+
+          body.appendChild(h5);
+          body.appendChild(price);
+          body.appendChild(note);
+          body.appendChild(a);
+          card.appendChild(body);
+          col.appendChild(card);
+          row.appendChild(col);
+        });
+
+        const h = el("h2","h5 mt-4 mb-3 text-center","Sugerencias para ti");
+        results.appendChild(h);
+        results.appendChild(row);
+      } else {
+        results.innerHTML = "<div class='alert alert-warning mt-4 text-center shadow-sm'>No encontré coincidencias exactas. Prueba con otro color o tipo. 🪴</div>";
+      }
+
+    } catch(err){
+      thinking.remove();
+      pushMsg(stream, "Ocurrió un error inesperado. Intenta otra vez. ");
+    }
+  });
+})();
+</script>
+{% endblock %}

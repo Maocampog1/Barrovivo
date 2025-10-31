@@ -14,6 +14,14 @@ from .forms import CrearCuentaForm
 from pedido.models import Pedido
 from producto.models import Producto, Categoria, Favorito
 
+import json
+from django.http import JsonResponse, HttpRequest
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
+
+from .groq_client import extract_criteria, write_answer
+from .chat_service import search_products
 
 
 
@@ -136,3 +144,32 @@ class CrearCuentaView(FormView):
         form.save()
         messages.success(self.request, "Cuenta creada. Ahora puedes iniciar sesión.")
         return super().form_valid(form)
+    
+class AsistenteView(TemplateView):
+    template_name = "asistente.html"  # o "usuario/asistente.html" según tu ruta
+
+
+@csrf_exempt
+@require_POST
+def chat_api(request: HttpRequest):
+    """
+    POST: { "message": "texto del usuario" }
+    RESP: { ok, text, products[] }
+    """
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        return JsonResponse({"error": "JSON inválido"}, status=400)
+
+    user_text = (payload.get("message") or "").strip()
+    if not user_text:
+        return JsonResponse({"error": "Falta 'message'"}, status=400)
+
+    try:
+        criteria = extract_criteria(user_text)          # 1) GROQ parse
+        products = search_products(criteria, user_text, limit=8)  # 2) BD con sinónimos
+        answer = write_answer(criteria, products)       # 3) GROQ redacción
+        return JsonResponse({"ok": True, "text": answer, "products": products})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return JsonResponse({"ok": False, "error": str(e)}, status=500)

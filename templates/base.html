@@ -19,6 +19,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
 
+
+
+  
   <body>
     {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-bv border-bottom">
@@ -34,6 +37,12 @@
 
         <div id="navbarMain" class="collapse navbar-collapse">
           <ul class="navbar-nav ms-auto align-items-center">
+
+
+             <li class="nav-item">
+              <a class="nav-link" href="{% url 'usuario:asistente' %}">Asistente</a>
+            </li>
+
 
             <!-- Favoritos -->
             <li class="nav-item">
