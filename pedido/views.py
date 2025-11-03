@@ -21,7 +21,7 @@ from producto.models import Producto
 
 
 class CarritoMixin(LoginRequiredMixin):
-    """Mixin para obtener/crear el carrito del usuario."""
+    #Mixin para obtener/crear el carrito del usuario.
     def get_carrito(self):
         carrito, _ = Carrito.objects.get_or_create(usuario=self.request.user)
         return carrito
@@ -134,13 +134,13 @@ class CheckoutView(TemplateView):
     """
     template_name = "checkout.html"
 
-    # --- helpers ---
+    
     def get_carrito(self):
         carrito, _ = Carrito.objects.get_or_create(usuario=self.request.user)
         return carrito
 
     def _items_carrito(self, carrito):
-        """Trae los ítems sin depender de la relación inversa (evita itemcarrito_set)."""
+        #Trae los ítems sin depender de la relación inversa (evita itemcarrito_set).
         return ItemCarrito.objects.filter(carrito=carrito)
 
     # --- GET (igual que lo tienes) ---
