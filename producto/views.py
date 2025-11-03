@@ -1,6 +1,7 @@
 # Autor: Maria Alejandra Ocampo
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -120,3 +121,21 @@ class FavoritosView(LoginRequiredMixin, ListView):
         for producto in context['productos']:
             producto.es_favorito = True
         return context
+    
+
+#Servicio de api
+def productos_json(request):
+    productos = Producto.objects.filter(es_activo=True, cantidad_disp__gt=0)
+    base_url = request.build_absolute_uri('/')[:-1]
+    data = []
+    for p in productos:
+        data.append({
+            "id": p.id,
+            "nombre": p.nombre,
+            "descripcion": p.descripcion,
+            "precio": str(p.precio),
+            "cantidad_disp": p.cantidad_disp,
+            # construimos la URL manualmente usando su id
+            "detalle_url":f"{base_url}/producto/{p.id}/"
+        })
+    return JsonResponse({"productos": data}, json_dumps_params={"ensure_ascii": False})
