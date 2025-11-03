@@ -1,2 +1,7 @@
+Django>=5,<6
 pillow
 weasyprint==61.2
+requests
+python-dotenv
+openpyxl
+xhtml2pdf

@@ -1,0 +1,365 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-05 18:35-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\pedido\templates\carrito_detalle.html:9
+msgid "Carro de Compras"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:11
+#: .\pedido\templates\checkout.html:123 .\pedido\templates\checkout.html:144
+#: .\pedido\templates\factura_html.html:78
+msgid "Total"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:31
+#: .\producto\templates\detalle.html:36 .\producto\templates\favoritos.html:63
+#: .\producto\templates\productos.html:34
+msgid "Sin imagen"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:56
+msgid "Actualizar"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:77
+msgid "Totales del carrito"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:80
+msgid "Subtotal:"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:87
+msgid "Total:"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:93
+msgid "Ir a pagar"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:104
+msgid "Tu carrito está vacío"
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:105
+msgid "Agrega algunos productos para comenzar a comprar."
+msgstr ""
+
+#: .\pedido\templates\carrito_detalle.html:106
+#: .\producto\templates\favoritos.html:118
+msgid "Ver productos"
+msgstr ""
+
+#: .\pedido\templates\checkout.html:14
+msgid "Revisa los campos marcados en rojo."
+msgstr ""
+
+#: .\pedido\templates\checkout.html:22
+msgid "Detalles de Facturación"
+msgstr ""
+
+#: .\pedido\templates\checkout.html:49
+msgid "Detalles de Envío"
+msgstr ""
+
+#: .\pedido\templates\checkout.html:82
+msgid "Pago"
+msgstr ""
+
+#: .\pedido\templates\checkout.html:129
+msgid "Pagar"
+msgstr ""
+
+#: .\pedido\templates\checkout.html:135
+msgid "Resumen del carrito"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:9
+msgid "Factura"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:36
+msgid "Imprimir / Guardar como PDF"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:43
+msgid "Factura de Venta"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:55
+msgid "Información de facturación"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:56
+msgid "Cliente"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:57
+msgid "Cédula"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:58
+msgid "Celular"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:59
+msgid "Correo"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:64
+msgid "Detalles de envío"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:65
+msgid "Departamento/Municipio"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:66
+msgid "Dirección"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:75
+msgid "Producto"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:76 .\producto\templates\detalle.html:50
+msgid "Cantidad"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:77
+msgid "Valor Neto"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:93
+msgid "TOTAL:"
+msgstr ""
+
+#: .\pedido\templates\factura_html.html:101
+msgid "Gracias por tu compra"
+msgstr ""
+
+#: .\pedido\templates\gracias.html:7
+msgid "¡Gracias por tu compra!"
+msgstr ""
+
+#: .\pedido\templates\gracias.html:10
+#, python-format
+msgid ""
+"\n"
+"        Tu número de pedido es <strong>%(pedido_id)s</strong><br>\n"
+"        En tu perfil puedes verificar tus compras.\n"
+"      "
+msgstr ""
+
+#: .\pedido\templates\gracias.html:20
+msgid "Ver / Descargar factura"
+msgstr ""
+
+#: .\producto\templates\detalle.html:19 .\producto\templates\productos.html:15
+msgid "Quitar de favoritos"
+msgstr ""
+
+#: .\producto\templates\detalle.html:19 .\producto\templates\productos.html:15
+msgid "Agregar a favoritos"
+msgstr ""
+
+#: .\producto\templates\detalle.html:26 .\producto\templates\productos.html:22
+msgid "Inicia sesión para agregar a favoritos"
+msgstr ""
+
+#: .\producto\templates\detalle.html:45 .\producto\templates\favoritos.html:49
+msgid "Precio"
+msgstr ""
+
+#: .\producto\templates\detalle.html:52
+msgid "Disminuir"
+msgstr ""
+
+#: .\producto\templates\detalle.html:61
+msgid "Aumentar"
+msgstr ""
+
+#: .\producto\templates\detalle.html:70 .\producto\templates\favoritos.html:93
+msgid "Añadir al carrito"
+msgstr ""
+
+#: .\producto\templates\detalle.html:76
+msgid "Producto agotado."
+msgstr ""
+
+#: .\producto\templates\detalle.html:79
+#, python-format
+msgid "No hay esa cantidad disponible. Máximo %(max)s."
+msgstr ""
+
+#: .\producto\templates\detalle.html:82
+msgid "Ya no puedes seleccionar más."
+msgstr ""
+
+#: .\producto\templates\detalle.html:85
+#, python-format
+msgid "Disponible: %(s)s"
+msgstr ""
+
+#: .\producto\templates\detalle.html:91
+msgid "Descripción:"
+msgstr ""
+
+#: .\producto\templates\detalle.html:98
+msgid "Categorías:"
+msgstr ""
+
+#: .\producto\templates\detalle.html:108
+msgid "Sin categoría"
+msgstr ""
+
+#: .\producto\templates\favoritos.html:42
+msgid "Mis Favoritos"
+msgstr ""
+
+#: .\producto\templates\favoritos.html:48
+msgid "Nombre Producto"
+msgstr ""
+
+#: .\producto\templates\favoritos.html:102
+msgid "Eliminar de Favoritos"
+msgstr ""
+
+#: .\producto\templates\favoritos.html:114
+msgid "No tienes favoritos"
+msgstr ""
+
+#: .\producto\templates\favoritos.html:116
+msgid "Agrega algunos productos a tus favoritos para verlos aquí."
+msgstr ""
+
+#: .\producto\templates\productos.html:37
+msgid "Dar clic para comprar"
+msgstr ""
+
+#: .\producto\templates\productos.html:51
+msgid "No hay productos disponibles por ahora."
+msgstr ""
+
+#: .\templates\base.html:40
+msgid "Me gusta"
+msgstr ""
+
+#: .\templates\base.html:47
+msgid "Carrito"
+msgstr ""
+
+#: .\templates\base.html:55 .\usuario\templates\perfil.html:9
+msgid "Perfil"
+msgstr ""
+
+#: .\templates\base.html:59
+msgid "Inicia sesión"
+msgstr ""
+
+#: .\templates\base.html:68
+msgid "Salir"
+msgstr ""
+
+#: .\usuario\templates\login.html:22
+msgid "Ingresa"
+msgstr ""
+
+#: .\usuario\templates\login.html:25
+msgid "Debes iniciar sesión para continuar."
+msgstr ""
+
+#: .\usuario\templates\login.html:31 .\usuario\templates\login.html:38
+#: .\usuario\templates\registro.html:43 .\usuario\templates\registro.html:50
+msgid "Email"
+msgstr ""
+
+#: .\usuario\templates\login.html:36 .\usuario\templates\registro.html:47
+msgid "Ingresa tu email"
+msgstr ""
+
+#: .\usuario\templates\login.html:43 .\usuario\templates\login.html:51
+#: .\usuario\templates\registro.html:59 .\usuario\templates\registro.html:66
+msgid "Contraseña"
+msgstr ""
+
+#: .\usuario\templates\login.html:50
+msgid "Ingresa tu contraseña"
+msgstr ""
+
+#: .\usuario\templates\login.html:53 .\usuario\templates\registro.html:69
+#: .\usuario\templates\registro.html:91
+msgid "Mostrar/Ocultar"
+msgstr ""
+
+#: .\usuario\templates\login.html:66
+msgid "Iniciar Sesión"
+msgstr ""
+
+#: .\usuario\templates\login.html:72
+msgid "Crear una cuenta"
+msgstr ""
+
+#: .\usuario\templates\perfil.html:10
+msgid "Nombre:"
+msgstr ""
+
+#: .\usuario\templates\perfil.html:11
+msgid "Correo:"
+msgstr ""
+
+#: .\usuario\templates\perfil.html:14
+msgid "Pedidos"
+msgstr ""
+
+#: .\usuario\templates\perfil.html:34
+msgid "Descargar tu factura"
+msgstr ""
+
+#: .\usuario\templates\perfil.html:42
+msgid "No tienes pedidos todavía."
+msgstr ""
+
+#: .\usuario\templates\registro.html:19 .\usuario\templates\registro.html:107
+msgid "Crear Cuenta"
+msgstr ""
+
+#: .\usuario\templates\registro.html:27 .\usuario\templates\registro.html:34
+msgid "Nombre completo"
+msgstr ""
+
+#: .\usuario\templates\registro.html:31
+msgid "Ingresa tu nombre"
+msgstr ""
+
+#: .\usuario\templates\registro.html:64
+msgid "Mínimo 8 caracteres"
+msgstr ""
+
+#: .\usuario\templates\registro.html:81 .\usuario\templates\registro.html:88
+msgid "Confirmar contraseña"
+msgstr ""
+
+#: .\usuario\templates\registro.html:86
+msgid "Confirma tu contraseña"
+msgstr ""
+
+#: .\usuario\templates\registro.html:113
+msgid "Ya tengo una cuenta"
+msgstr ""

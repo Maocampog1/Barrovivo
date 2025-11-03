@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize i18n %}
 
 {% block content %}
 <div class="container-xl detalle-producto py-4">
   <div class="row g-4 align-items-start">
 
-    <!-- Imagen grande -->
+    <!-- Imagen -->
     <div class="col-12 col-lg-6">
       <div class="p-3 bg-white border rounded-3 text-center position-relative">
         <!-- Botón de favoritos -->
@@ -14,13 +14,16 @@
             <form method="post" action="{% url 'producto:toggle_favorito' producto.id %}" class="d-inline">
               {% csrf_token %}
               <input type="hidden" name="next" value="{{ request.path }}?q={{ cantidad }}">
-              <button type="submit" class="btn-favorito btn-favorito-lg {% if es_favorito %}favorito-activo{% endif %}" 
-                      title="{% if es_favorito %}Quitar de favoritos{% else %}Agregar a favoritos{% endif %}">
+              <button type="submit"
+                      class="btn-favorito btn-favorito-lg {% if es_favorito %}favorito-activo{% endif %}"
+                      title="{% if es_favorito %}{% trans 'Quitar de favoritos' %}{% else %}{% trans 'Agregar a favoritos' %}{% endif %}">
                 <i class="bi bi-heart{% if es_favorito %}-fill{% endif %}"></i>
               </button>
             </form>
           {% else %}
-            <a href="{% url 'usuario:login' %}?next={{ request.path }}?q={{ cantidad }}" class="btn-favorito btn-favorito-lg" title="Inicia sesión para agregar a favoritos">
+            <a href="{% url 'usuario:login' %}?next={{ request.path }}?q={{ cantidad }}"
+               class="btn-favorito btn-favorito-lg"
+               title="{% trans 'Inicia sesión para agregar a favoritos' %}">
               <i class="bi bi-heart"></i>
             </a>
           {% endif %}
@@ -30,7 +33,7 @@
           <img src="{{ producto.imagen.url }}" class="img-fluid"
                style="max-height:520px;object-fit:contain;" alt="{{ producto.nombre }}">
         {% else %}
-          <div class="py-5 text-muted">Sin imagen</div>
+          <div class="py-5 text-muted">{% trans "Sin imagen" %}</div>
         {% endif %}
       </div>
     </div>
@@ -38,13 +41,15 @@
     <!-- Datos -->
     <div class="col-12 col-lg-6">
       <h1 class="h2 fw-bold mb-3">{{ producto.nombre }}</h1>
-      <p class="fs-5 mb-4">Precio: ${{ producto.precio|floatformat:0|intcomma }}</p>
+      <p class="fs-5 mb-4">
+        {% trans "Precio" %}: ${{ producto.precio|floatformat:0|intcomma }}
+      </p>
 
-      <!-- Cantidad + botón (sin backend, sin JS) -->
+      <!-- Cantidad + botón -->
       <div class="d-flex align-items-center gap-2 mb-2">
-        <div class="btn-group cantidad" role="group" aria-label="Cantidad">
+        <div class="btn-group cantidad" role="group" aria-label="{% trans 'Cantidad' %}">
           <a class="btn btn-outline-secondary btn-sm {% if cantidad <= 1 or sin_stock %}disabled{% endif %}"
-             href="?q={{ cantidad|add:'-1' }}" aria-label="Disminuir">−</a>
+             href="?q={{ cantidad|add:'-1' }}" aria-label="{% trans 'Disminuir' %}">−</a>
 
           <input type="text" class="form-control form-control-sm text-center cantidad-input"
                  value="{{ cantidad }}" readonly style="width:56px;">
@@ -53,7 +58,7 @@
             <a class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">+</a>
           {% else %}
             <a class="btn btn-outline-secondary btn-sm"
-               href="?q={{ cantidad|add:'1' }}" aria-label="Aumentar">+</a>
+               href="?q={{ cantidad|add:'1' }}" aria-label="{% trans 'Aumentar' %}">+</a>
           {% endif %}
         </div>
 
@@ -62,32 +67,35 @@
           <input type="hidden" name="cantidad" value="{{ cantidad }}">
           <input type="hidden" name="next" value="{{ request.path }}?q={{ cantidad }}">
           <button type="submit" class="btn btn-bv btn-lg rounded-pill px-4" {% if sin_stock %}disabled{% endif %}>
-            Añadir al carrito
+            {% trans "Añadir al carrito" %}
           </button>
         </form>
       </div>
 
       {% if sin_stock %}
-        <div class="text-danger small">Producto agotado.</div>
+        <div class="text-danger small">{% trans "Producto agotado." %}</div>
       {% elif excedido %}
-        <div class="text-danger small">No hay esa cantidad disponible. Máximo {{ stock }}.</div>
+        <div class="text-danger small">
+          {% blocktrans with max=stock %}No hay esa cantidad disponible. Máximo {{ max }}.{% endblocktrans %}
+        </div>
       {% elif al_tope %}
-       <div class="text-danger small">Ya no puedes seleccionar más.</div>
-
+        <div class="text-danger small">{% trans "Ya no puedes seleccionar más." %}</div>
       {% else %}
-        <div class="text-muted small">Disponible: {{ stock }}</div>
+        <div class="text-muted small">
+          {% blocktrans with s=stock %}Disponible: {{ s }}{% endblocktrans %}
+        </div>
       {% endif %}
 
       {% if producto.descripcion %}
         <div class="mb-4 mt-3">
-          <div class="fw-semibold">Descripción:</div>
+          <div class="fw-semibold">{% trans "Descripción:" %}</div>
           <div>{{ producto.descripcion }}</div>
         </div>
       {% endif %}
 
-      <!-- Categorías (ManyToMany) -->
+      <!-- Categorías -->
       <div>
-        <div class="fw-semibold">Categorías:</div>
+        <div class="fw-semibold">{% trans "Categorías:" %}</div>
         {% with cats=producto.categorias.all %}
           {% if cats %}
             <ul class="mb-0">
@@ -97,7 +105,7 @@
             </ul>
           {% else %}
             <ul class="mb-0">
-              <li class="text-muted">Sin categoría</li>
+              <li class="text-muted">{% trans "Sin categoría" %}</li>
             </ul>
           {% endif %}
         {% endwith %}

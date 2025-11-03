@@ -1,0 +1,150 @@
+{% load humanize i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Reporte de Ventas" %}</title>
+  <style>
+    /* === Configuración de página (xhtml2pdf friendly) === */
+    @page {
+      size: A4;
+      margin: 20mm 15mm;
+    }
+
+    body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #222; }
+    h1, h2, h3 { margin: 0; padding: 0; }
+
+    /* Encabezado */
+    .header {
+      border-bottom: 2px solid #222;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .brand { font-weight: 700; letter-spacing: .5px; }
+    .subtitle { color: #666; font-size: 10px; margin-top: 4px; }
+
+    /* Resumen */
+    .summary {
+      border: 1px solid #ccc;
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .summary-table { width: 100%; border-collapse: collapse; }
+    .summary-table td { padding: 6px 8px; border: 1px solid #ddd; }
+    .summary-table .label { background: #f5f5f5; font-weight: 600; width: 35%; }
+
+    /* Pedido (card) */
+    .pedido {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin: 10px 0 14px;
+    }
+    .pedido-head {
+      background: #f3efe9; /* tono cerámica */
+      border-bottom: 1px solid #ddd;
+      padding: 8px 10px;
+    }
+    .pedido-title { font-size: 13px; font-weight: 700; }
+    .pedido-meta { margin-top: 4px; color: #555; }
+
+    /* Tabla de items */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 6px 8px; border: 1px solid #ddd; }
+    th { background: #eee; font-size: 11px; }
+    .row-odd { background: #fcfcfc; }
+    .right { text-align: right; }
+    .muted { color: #666; }
+
+    /* Total por pedido */
+    .pedido-total {
+      text-align: right;
+      font-weight: 700;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-top: none;
+    }
+
+    /* Pie */
+    .footer {
+      margin-top: 8px;
+      font-size: 10px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado -->
+  <div class="header">
+    <h1 class="brand">BARROVIVO — {% trans "Reporte de Ventas" %}</h1>
+    <div class="subtitle">
+      {% trans "Generado" %}: {{ now|date:"Y-m-d H:i" }} &nbsp;•&nbsp;
+      {% trans "Pedidos incluidos" %}: {{ pedidos|length }}
+    </div>
+  </div>
+
+  <!-- Resumen simple -->
+  <div class="summary">
+    <table class="summary-table">
+      <tr>
+        <td class="label">{% trans "Total de pedidos" %}</td>
+        <td>{{ pedidos|length }}</td>
+      </tr>
+      <tr>
+        <td class="label">{% trans "Rango de fechas (por registro)" %}</td>
+        <td class="muted">{% trans "Se muestra la fecha de cada pedido en su tarjeta." %}</td>
+      </tr>
+    </table>
+  </div>
+
+  {% if pedidos %}
+    {% for p in pedidos %}
+      <div class="pedido">
+        <div class="pedido-head">
+          <div class="pedido-title">#{{ p.id }} — {{ p.nombre_cliente }}</div>
+          <div class="pedido-meta">
+            {{ p.fecha|date:"Y-m-d H:i" }} &nbsp;•&nbsp;
+            {{ p.correo }} — {{ p.departamento }}, {{ p.municipio }} — {{ p.direccion }}
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:60%">{% trans "Producto" %}</th>
+              <th style="width:10%" class="right">{% trans "Cantidad" %}</th>
+              <th style="width:15%" class="right">{% trans "Precio" %}</th>
+              <th style="width:15%" class="right">{% trans "Subtotal" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for it in p.items.all %}
+              <tr class="{% cycle 'row-odd' 'row-even' %}">
+                <td>{{ it.producto.nombre }}</td>
+                <td class="right">{{ it.cantidad }}</td>
+                <td class="right">${{ it.precio|intcomma }}</td>
+                <td class="right">
+                  ${{ it.precio|floatformat:0|add:"0"|floatformat:0|intcomma }}
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="muted">{% trans "Sin ítems." %}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="pedido-total">
+          {% trans "Total" %}: ${{ p.total|intcomma }}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="muted">{% trans "No hay pedidos." %}</p>
+  {% endif %}
+
+  <div class="footer">
+    BARROVIVO · {% trans "Documento generado automáticamente" %}.
+  </div>
+</body>
+</html>

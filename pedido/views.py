@@ -10,11 +10,15 @@ from .forms import FormularioFacturacion, FormularioEnvio, FormularioPago
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from decimal import Decimal
-
-from .models import Carrito, ItemCarrito
+from django.db import transaction
+from django.utils import timezone
+from django.utils.timezone import now
+from .models import Carrito, ItemCarrito, Pedido, PedidoItem
 from producto.models import Producto
 
-# Autor: Luis Angel Nerio   
+# Autor: Luis Angel Nerio  
+# Editado: Camilo Salazar 
+
 
 class CarritoMixin(LoginRequiredMixin):
     #Mixin para obtener/crear el carrito del usuario.
@@ -24,8 +28,8 @@ class CarritoMixin(LoginRequiredMixin):
 
 
 class CarritoDetalleView(CarritoMixin, TemplateView):
-    # Vista para mostrar el detalle del carrito de compras.
-    template_name = "carrito_detalle.html"
+    """Vista para mostrar el detalle del carrito de compras."""
+    template_name = "carrito_detalle.html"   
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -37,26 +41,39 @@ class CarritoDetalleView(CarritoMixin, TemplateView):
 
 
 class AgregarAlCarritoView(CarritoMixin, View):
-    #POST: agregar un producto al carrito.
+    """POST: agregar un producto al carrito respetando el stock."""
     def post(self, request, producto_id, *args, **kwargs):
         producto = get_object_or_404(Producto, id=producto_id)
-        cantidad = int(request.POST.get("cantidad", 1))
+        stock = int(getattr(producto, "cantidad_disp", 0) or 0)
+        try:
+            cantidad = max(1, int(request.POST.get("cantidad", 1)))
+        except (TypeError, ValueError):
+            cantidad = 1
 
         carrito = self.get_carrito()
-        item, created = ItemCarrito.objects.get_or_create(
+        item, _ = ItemCarrito.objects.get_or_create(
             carrito=carrito,
             producto=producto,
-            defaults={"cantidad": cantidad},
+            defaults={"cantidad": 0},
         )
-        if not created:
-            item.cantidad += cantidad
-            item.save()
 
-        messages.success(request, f"{producto.nombre} agregado al carrito.")
+        actual = int(item.cantidad or 0)
+        disponible = max(0, stock - actual)
+
+        if disponible <= 0:
+            messages.warning(request, "No hay más unidades disponibles de este producto.")
+        else:
+            agregar = min(cantidad, disponible)
+            item.cantidad = actual + agregar
+            item.save()
+            if agregar < cantidad:
+                messages.warning(request, f"Solo se agregaron {agregar} unidad(es). Límite por stock: {stock}.")
+            else:
+                messages.success(request, f"{producto.nombre} agregado al carrito.")
+
         next_url = request.POST.get("next") or reverse("pedido:carrito")
         return redirect(next_url)
 
-    # Si alguien entra por GET, lo redirigimos al detalle del producto (o al carrito).
     def get(self, request, producto_id, *args, **kwargs):
         try:
             return redirect("producto:detalle", pk=producto_id)
@@ -64,19 +81,31 @@ class AgregarAlCarritoView(CarritoMixin, View):
             return redirect("pedido:carrito")
 
 
+
 class ActualizarCantidadView(CarritoMixin, View):
-    #POST: actualizar la cantidad de un item.
+    """POST: actualizar la cantidad de un item respetando el stock."""
     def post(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
-        nueva = int(request.POST.get("cantidad", 1))
+        stock = int(getattr(item.producto, "cantidad_disp", 0) or 0)
 
-        if nueva > 0:
+        try:
+            nueva = int(request.POST.get("cantidad", 1))
+        except (TypeError, ValueError):
+            nueva = 1
+
+        if stock <= 0 or nueva <= 0:
+            item.delete()
+            messages.warning(request, "Producto sin stock o cantidad inválida. Se removió del carrito.")
+            return redirect("pedido:carrito")
+
+        if nueva > stock:
+            item.cantidad = stock
+            item.save()
+            messages.warning(request, f"Cantidad ajustada a {stock} por límite de stock.")
+        else:
             item.cantidad = nueva
             item.save()
             messages.success(request, "Cantidad actualizada.")
-        else:
-            item.delete()
-            messages.success(request, "Producto removido del carrito.")
 
         return redirect("pedido:carrito")
 
@@ -98,11 +127,11 @@ class RemoverDelCarritoView(CarritoMixin, View):
 
 
 class CheckoutView(TemplateView):
-
-    # Página de checkout:
-    # - GET: muestra formularios + resumen del carrito
-    # - POST: valida, guarda la compra en sesión, vacía el carrito y redirige a /pedido/gracias/
-
+    """
+    Página de checkout:
+    - GET: muestra formularios + resumen del carrito
+    - POST: valida, descuenta stock, guarda la compra en sesión, vacía el carrito y redirige.
+    """
     template_name = "checkout.html"
 
     
@@ -114,7 +143,7 @@ class CheckoutView(TemplateView):
         #Trae los ítems sin depender de la relación inversa (evita itemcarrito_set).
         return ItemCarrito.objects.filter(carrito=carrito)
 
-    
+    # --- GET (igual que lo tienes) ---
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         carrito = self.get_carrito()
@@ -128,13 +157,12 @@ class CheckoutView(TemplateView):
         })
         return ctx
 
-    # --- POST ---
+    # --- POST (nuevo con descuento de stock) ---
     def post(self, request, *args, **kwargs):
         f_fact = FormularioFacturacion(request.POST)
-        f_env  = FormularioEnvio(request.POST)
+        f_env = FormularioEnvio(request.POST)
         f_pago = FormularioPago(request.POST)
 
-        # Si hay errores, re-pintamos con los datos del carrito
         if not (f_fact.is_valid() and f_env.is_valid() and f_pago.is_valid()):
             carrito = self.get_carrito()
             return self.render_to_response({
@@ -145,104 +173,66 @@ class CheckoutView(TemplateView):
                 "total": carrito.obtener_total(),
             })
 
-        
         carrito = self.get_carrito()
-        items_qs = self._items_carrito(carrito)
+        items_qs = self._items_carrito(carrito).select_related("producto")
 
-        def _to_float(val):
-            return float(val) if isinstance(val, Decimal) else val
+        if not items_qs.exists():
+            messages.warning(request, "Tu carrito está vacío.")
+            return redirect("pedido:carrito")
 
-        lineas = []
-        for it in items_qs:
-            precio_unit = getattr(it, "precio_unitario", getattr(it.producto, "precio", 0))
-           
-            _subtotal_attr = getattr(it, "subtotal", None)
-            if callable(_subtotal_attr):
-                subtotal = _subtotal_attr()
-            elif _subtotal_attr is not None:
-                subtotal = _subtotal_attr
-            else:
-                subtotal = it.cantidad * precio_unit
-            lineas.append({
-                "nombre": getattr(it.producto, "nombre", str(it.producto)),
-                "cantidad": it.cantidad,
-                "precio_unitario": _to_float(precio_unit),
-                "subtotal": _to_float(subtotal),
-            })
+        #numero_pedido = now().strftime("%y%m%d%H%M%S")
+#Editado por Camilo Salazar
+        with transaction.atomic():
+            # Crear Pedido
+            pedido = Pedido.objects.create(
+                usuario=request.user,
+                nombre_cliente=f"{f_fact.cleaned_data['nombres']} {f_fact.cleaned_data['apellidos']}",
+                correo=f_fact.cleaned_data["correo"],
+                cedula=f_fact.cleaned_data["cedula"],
+                celular=f_env.cleaned_data["telefono"],
+                departamento=f_env.cleaned_data["departamento"],
+                municipio=f_env.cleaned_data["municipio"],
+                direccion=f_env.cleaned_data["direccion"],
+                apto_info=f_env.cleaned_data.get("apto_info", ""),
+                total=carrito.obtener_total(),
+            )
 
-        # Calcular total desde las líneas para no depender del estado del carrito
-        try:
-            computed_total = sum(l["subtotal"] for l in lineas)
-        except Exception:
-            computed_total = 0
+            # Crear PedidoItem y descontar stock
+            for it in items_qs:
+                prod = it.producto
+                prod.restar_cantidad(it.cantidad)
+                PedidoItem.objects.create(
+                    pedido=pedido,
+                    producto=prod,
+                    cantidad=it.cantidad,
+                    precio=prod.precio
+                )
 
-        compra = {
-            "numero": timezone.now().strftime("%y%m%d%H%M%S"),   
-            "creado": timezone.now().strftime("%d/%m/%Y"),
-            "total": _to_float(computed_total),
-            "facturacion": {
-                "correo": f_fact.cleaned_data["correo"],
-                "nombres": f_fact.cleaned_data["nombres"],
-                "apellidos": f_fact.cleaned_data["apellidos"],
-                "cedula": f_fact.cleaned_data["cedula"],
-                "telefono": f_env.cleaned_data["telefono"],
-            },
-            "envio": {
-                "departamento": f_env.cleaned_data["departamento"],
-                "municipio": f_env.cleaned_data["municipio"],
-                "direccion": f_env.cleaned_data["direccion"],
-                "apto_info": f_env.cleaned_data.get("apto_info", ""),
-            },
-            "pago": {
-                "metodo": f_pago.cleaned_data["metodo"],
-                "nombre_en_tarjeta": f_pago.cleaned_data["nombre_en_tarjeta"],
-            },
-            "lineas": lineas,
-        }
+            carrito.items.all().delete()
 
-        # Guardar compra en sesión y vaciar carrito
-        request.session["ultima_compra"] = compra
-        request.session.modified = True
-
-       
-        if hasattr(carrito, "vaciar"):
-            carrito.vaciar()
-        else:
-            self._items_carrito(carrito).delete()
-
-       
+        request.session["ultima_compra_id"] = pedido.id
         return redirect("pedido:gracias")
 
 
-class GraciasView(TemplateView):
+class GraciasView(LoginRequiredMixin, TemplateView):
     template_name = "gracias.html"
-    def get(self, request, *args, **kwargs):
-        if "ultima_compra" not in request.session:
-            return HttpResponseRedirect("/")
-        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["compra"] = self.request.session.get("ultima_compra", {})
-        # Detectar si la generación de PDF está disponible en este entorno
-        try:
-            from weasyprint import HTML  
-            ctx["pdf_disponible"] = True
-        except Exception:
-            ctx["pdf_disponible"] = False
+        pedido_id = self.request.session.get("ultima_compra_id")
+        if not pedido_id:
+            raise Http404("No hay pedido registrado")
+        pedido = get_object_or_404(Pedido, id=pedido_id, usuario=self.request.user)
+        ctx["pedido"] = pedido
         return ctx
 
 
-
-class FacturaHTMLView(TemplateView):
-    #Fallback imprimible en HTML para guardar como PDF desde el navegador.
+class FacturaHTMLView(LoginRequiredMixin, TemplateView):
     template_name = "factura_html.html"
-
-    def get(self, request, *args, **kwargs):
-        if "ultima_compra" not in request.session:
-            return HttpResponseRedirect("/")
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["compra"] = self.request.session.get("ultima_compra")
+        pedido = get_object_or_404(Pedido, id=kwargs.get("pk"), usuario=self.request.user)
+        ctx["pedido"] = pedido
+        ctx["itemsPedido"] = pedido.items.all()  
         return ctx

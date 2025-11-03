@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block navbar %}{% endblock %}
 
 {% block main %}
@@ -14,57 +16,85 @@
     <!-- Derecha: formulario -->
     <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center bg-white">
       <div class="w-100 px-4" style="max-width:520px;">
-        <h1 class="titulo-registro">Crear Cuenta</h1>
+        <h1 class="titulo-registro">{% trans "Crear Cuenta" %}</h1>
 
         <form method="post" novalidate>
           {% csrf_token %}
 
           <!-- Nombre -->
           <div class="mb-3">
-            <label for="id_nombre" class="form-label small fw-semibold">Nombre completo*</label>
+            <label for="id_nombre" class="form-label small fw-semibold">
+              {% trans "Nombre completo" %}*
+            </label>
             <input id="id_nombre" type="text" name="nombre"
                    class="form-control form-control-lg bv-soft"
-                   placeholder="Ingresa tu nombre" autocomplete="name"
-                   value="{{ form.nombre.value|default:'' }}">
-            {% if form.nombre.errors %}<div class="text-danger small mt-1">{{ form.nombre.errors.0 }}</div>{% endif %}
+                   placeholder="{% trans 'Ingresa tu nombre' %}"
+                   autocomplete="name"
+                   value="{{ form.nombre.value|default:'' }}"
+                   aria-label="{% trans 'Nombre completo' %}">
+            {% if form.nombre.errors %}
+              <div class="text-danger small mt-1">{{ form.nombre.errors.0 }}</div>
+            {% endif %}
           </div>
 
           <!-- Email -->
           <div class="mb-3">
-            <label for="id_email" class="form-label small fw-semibold">Email*</label>
+            <label for="id_email" class="form-label small fw-semibold">
+              {% trans "Email" %}*
+            </label>
             <input id="id_email" type="email" name="email"
                    class="form-control form-control-lg bv-soft"
-                   placeholder="Ingresa tu email" autocomplete="email"
-                   value="{{ form.email.value|default:'' }}">
-            {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+                   placeholder="{% trans 'Ingresa tu email' %}"
+                   autocomplete="email"
+                   value="{{ form.email.value|default:'' }}"
+                   aria-label="{% trans 'Email' %}">
+            {% if form.email.errors %}
+              <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+            {% endif %}
           </div>
 
           <!-- Contraseña -->
           <div class="mb-3">
-            <label for="id_password1" class="form-label small fw-semibold">Contraseña*</label>
+            <label for="id_password1" class="form-label small fw-semibold">
+              {% trans "Contraseña" %}*
+            </label>
             <div class="input-group input-group-lg">
               <input id="id_password1" type="password" name="contrasena1"
-                     class="form-control bv-soft" placeholder="Mínimo 8 caracteres"
-                     autocomplete="new-password">
-              <button type="button" class="btn btn-eye" onclick="togglePwd('id_password1', this)" aria-label="Mostrar/Ocultar">
+                     class="form-control bv-soft"
+                     placeholder="{% trans 'Mínimo 8 caracteres' %}"
+                     autocomplete="new-password"
+                     aria-label="{% trans 'Contraseña' %}">
+              <button type="button" class="btn btn-eye"
+                      onclick="togglePwd('id_password1', this)"
+                      aria-label="{% trans 'Mostrar/Ocultar' %}">
                 <i class="bi bi-eye"></i>
               </button>
             </div>
-            {% if form.contrasena1.errors %}<div class="text-danger small mt-1">{{ form.contrasena1.errors.0 }}</div>{% endif %}
+            {% if form.contrasena1.errors %}
+              <div class="text-danger small mt-1">{{ form.contrasena1.errors.0 }}</div>
+            {% endif %}
           </div>
 
           <!-- Confirmar -->
           <div class="mb-4">
-            <label for="id_password2" class="form-label small fw-semibold">Confirmar contraseña*</label>
+            <label for="id_password2" class="form-label small fw-semibold">
+              {% trans "Confirmar contraseña" %}*
+            </label>
             <div class="input-group input-group-lg">
               <input id="id_password2" type="password" name="contrasena2"
-                     class="form-control bv-soft" placeholder="Confirma tu contraseña"
-                     autocomplete="new-password">
-              <button type="button" class="btn btn-eye" onclick="togglePwd('id_password2', this)" aria-label="Mostrar/Ocultar">
+                     class="form-control bv-soft"
+                     placeholder="{% trans 'Confirma tu contraseña' %}"
+                     autocomplete="new-password"
+                     aria-label="{% trans 'Confirmar contraseña' %}">
+              <button type="button" class="btn btn-eye"
+                      onclick="togglePwd('id_password2', this)"
+                      aria-label="{% trans 'Mostrar/Ocultar' %}">
                 <i class="bi bi-eye"></i>
               </button>
             </div>
-            {% if form.contrasena2.errors %}<div class="text-danger small mt-1">{{ form.contrasena2.errors.0 }}</div>{% endif %}
+            {% if form.contrasena2.errors %}
+              <div class="text-danger small mt-1">{{ form.contrasena2.errors.0 }}</div>
+            {% endif %}
           </div>
 
           {% if form.non_field_errors %}
@@ -73,11 +103,15 @@
 
           <!-- botón centrado -->
           <div class="text-center">
-            <button class="btn btn-bv btn-lg rounded-pill px-5">Crear Cuenta</button>
+            <button class="btn btn-bv btn-lg rounded-pill px-5">
+              {% trans "Crear Cuenta" %}
+            </button>
           </div>
 
           <div class="text-center mt-3">
-            <a class="text-muted small text-decoration-none" href="{% url 'usuario:login' %}">Ya tengo una cuenta</a>
+            <a class="text-muted small text-decoration-none" href="{% url 'usuario:login' %}">
+              {% trans "Ya tengo una cuenta" %}
+            </a>
           </div>
         </form>
       </div>
@@ -92,7 +126,6 @@
   .bv-soft{ background:#FEF8EC; }
   .bv-soft:focus{ background:#FEF8EC; box-shadow:0 0 0 .2rem rgba(239,110,58,.15); }
   .form-control::placeholder{ font-size:.875rem; color:#8b8b8b; }
-  /* ocultar ojo nativo (Edge/Chromium) */
   input::-ms-reveal, input::-ms-clear{ display:none; }
   .btn-eye{ border:1px solid #ced4da; border-left:0; background:#fff; }
   .btn-eye:hover{ background:#f6f6f6; }
