@@ -177,4 +177,12 @@ where msgattrib
 
 ---
 
+## Uso de Api
 
+la url a la que deben apuntar es 
+
+  ```powershell
+http://xxxx/producto/api/productos/
+  ```
+
+cambiando `xxxx` por la dirección de despliegue
