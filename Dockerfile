@@ -23,18 +23,18 @@ RUN apt-get update -y && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar y instalar Python deps
+# Copiar e instalar dependencias Python
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copiar el código
+# Copiar el código del proyecto
 COPY . /app/
 
-# STATICFILES (solo si ya tienes configurado collectstatic)
-# RUN python manage.py collectstatic --noinput
+# Ejecutar collectstatic
+RUN python manage.py collectstatic --noinput
 
-# Puerto interno expuesto por el contenedor
+# Exponer puerto del servidor
 EXPOSE 8080
 
-# Comando de arranque con Gunicorn
+# Arranque con Gunicorn
 CMD ["gunicorn", "Barrovivo.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
