@@ -6,10 +6,12 @@ services:
     container_name: barrovivo_app
     command: gunicorn Barrovivo.wsgi:application --bind 0.0.0.0:8080 --workers 3
     volumes:
-      - static_volume:/app/staticfiles
-      - media_volume:/app/multimedia
+      - ./staticfiles:/app/staticfiles
+      - ./multimedia:/app/multimedia
     expose:
       - "8080"
+    depends_on:
+      - nginx
 
   nginx:
     image: nginx:alpine
@@ -17,12 +19,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - static_volume:/app/staticfiles
-      - media_volume:/app/multimedia
+      - ./staticfiles:/app/staticfiles
+      - ./multimedia:/app/multimedia
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web
-
-volumes:
-  static_volume:
-  media_volume:
