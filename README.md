@@ -186,3 +186,15 @@ http://xxxx/producto/api/productos/
   ```
 
 cambiando `xxxx` por la dirección de despliegue
+
+Se debe hacer un request a la dirección previamente mencionada.
+Esto retorna un json con la información de los productos la cual está organizada de la siguiente manera:
+ ```powershell
+    "id": p.id,
+    "nombre": p.nombre,
+    "descripcion": p.descripcion,
+    "precio": str(p.precio),
+    "cantidad_disp": p.cantidad_disp,
+    "detalle_url":f"{base_url}/producto/{p.id}/"
+
+  ```
