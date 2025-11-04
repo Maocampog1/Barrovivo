@@ -10,8 +10,6 @@ services:
       - media_volume:/app/multimedia
     expose:
       - "8080"
-    depends_on:
-      - nginx
 
   nginx:
     image: nginx:alpine
