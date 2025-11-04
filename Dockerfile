@@ -40,5 +40,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8080
 
 # Ejecutar collectstatic en runtime y servir con runserver temporalmente
-CMD python manage.py collectstatic --noinput && \
-    python manage.py runserver 0.0.0.0:8080
+CMD ["gunicorn", "Barrovivo.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
