@@ -147,7 +147,7 @@ LANGUAGES = [
 
 
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/multimedia/'
 MEDIA_ROOT = BASE_DIR / 'multimedia'      # subidas de usuarios / imágenes
 
 
