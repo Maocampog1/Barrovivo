@@ -33,7 +33,6 @@ RUN pip install --upgrade pip && pip install -r requirements.txt && pip cache pu
 # Copiar el código del proyecto
 COPY . /app/
 
-RUN mkdir -p /app/staticfiles /app/multimedia
 
 
 # Ejecutar collectstatic
