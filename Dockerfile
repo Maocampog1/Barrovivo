@@ -4,13 +4,13 @@ FROM python:3.11-slim
 # Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DEBUG=False
 ENV DJANGO_SETTINGS_MODULE=Barrovivo.settings
 ENV ALLOWED_HOSTS="*"
-ENV DEBUG=False
 
 WORKDIR /app
 
-# Instalar dependencias del sistema necesarias para Cairo, Django, PDF, imágenes, etc. + NGINX
+# Instalar dependencias del sistema necesarias para Cairo, Django, PDF, imágenes, etc.
 RUN apt-get update -y && apt-get install -y \
     gcc \
     libcairo2-dev \
@@ -23,26 +23,21 @@ RUN apt-get update -y && apt-get install -y \
     libxslt1-dev \
     libssl-dev \
     build-essential \
-    nginx \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar dependencias
+# Copiar e instalar dependencias Python
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt && pip cache purge
 
-# Copiar el proyecto
+# Copiar el código del proyecto
 COPY . /app/
 
-# Recolectar archivos estáticos
+# Ejecutar collectstatic
 RUN python manage.py collectstatic --noinput
 
-# Copiar configuración de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Exponer puerto
+# Exponer puerto del servidor
 EXPOSE 8080
 
-# Arranque de Nginx + Gunicorn
-CMD service nginx start && \
-    gunicorn Barrovivo.wsgi:application --bind 127.0.0.1:8080 --workers 3
+# Arranque con Gunicorn
+CMD ["gunicorn", "Barrovivo.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
