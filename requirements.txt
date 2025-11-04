@@ -7,3 +7,5 @@ openpyxl
 xhtml2pdf
 gunicorn
 whitenoise
+django-storages
+google-cloud-storage
