@@ -36,7 +36,7 @@ COPY . /app/
 
 
 # Ejecutar collectstatic
-RUN mkdir -p /app/staticfiles /app/multimedia
+RUN mkdir -p /app/staticfiles /app/media
 
 RUN python manage.py collectstatic --noinput
 
