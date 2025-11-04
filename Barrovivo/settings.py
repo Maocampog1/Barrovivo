@@ -166,9 +166,9 @@ GROQ_MODEL   = "llama-3.1-8b-instant"                               # fijo y rá
 GROQ_TIMEOUT = 12                                                   # fijo y razonable
 
 # Static files
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'staticfiles'
+    BASE_DIR / 'static'
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
