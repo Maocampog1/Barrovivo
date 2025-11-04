@@ -3,10 +3,11 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.urls import reverse
 from .models import Producto, Favorito
+import requests
 
 
 class InicioProductosView(ListView):
@@ -139,3 +140,23 @@ def productos_json(request):
             "detalle_url":f"{base_url}/producto/{p.id}/"
         })
     return JsonResponse({"productos": data}, json_dumps_params={"ensure_ascii": False})
+
+def productos_aliados(request):
+
+    url = "http://54.221.172.76/productos/api/productos-en-stock/"
+    productos_aliados = []
+
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()  
+        productos_aliados = response.json()
+
+
+        if isinstance(productos_aliados, dict):
+            productos_aliados = [productos_aliados]
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error al consumir el servicio externo: {e}")
+
+    context = {"productos_aliados": productos_aliados}
+    return render(request, "productos_aliados.html", context)
