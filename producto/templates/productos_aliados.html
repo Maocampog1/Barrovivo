@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load humanize i18n %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Productos Aliados</h2>
+
+    {% if productos_aliados %}
+        <div class="row">
+            {% for producto in productos_aliados %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ producto.imagen }}" class="card-img-top" alt="{{ producto.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto.nombre }}</h5>
+                        <p class="card-text">{{ producto.descripcion|truncatewords:20 }}</p>
+                        <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+                        <p><strong>Stock:</strong> {{ producto.cantidadDisp }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">No se pudieron obtener productos aliados.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

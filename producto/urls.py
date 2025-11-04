@@ -1,6 +1,6 @@
 from django.urls import path
 from django.views.generic import RedirectView
-from .views import InicioProductosView, ProductoDetalleView, ToggleFavoritoView, FavoritosView, productos_json
+from .views import InicioProductosView, ProductoDetalleView, ToggleFavoritoView, FavoritosView, productos_json, productos_aliados
 
 
 app_name = 'producto'
@@ -11,4 +11,5 @@ urlpatterns = [
     path('favoritos/', FavoritosView.as_view(), name='favoritos'),
     path('toggle-favorito/<int:producto_id>/', ToggleFavoritoView.as_view(), name='toggle_favorito'),
     path('api/productos/', productos_json, name='api_productos'),
+    path("productos-aliados/", productos_aliados, name="productos_aliados"),
 ]
