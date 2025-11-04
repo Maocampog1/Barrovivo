@@ -37,4 +37,4 @@ COPY . /app/
 EXPOSE 8080
 
 # Comando de arranque con Gunicorn
-CMD ["gunicorn", "barrovivo.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
+CMD ["gunicorn", "Barrovivo.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
