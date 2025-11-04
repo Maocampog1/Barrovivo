@@ -6,3 +6,4 @@ python-dotenv
 openpyxl
 xhtml2pdf
 gunicorn
+whitenoise
