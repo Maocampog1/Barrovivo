@@ -142,7 +142,6 @@ LANGUAGES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']  # para CSS/JS/imagenes globales
 MEDIA_URL = '/multimedia/'
@@ -165,3 +164,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"   # fijo
 GROQ_MODEL   = "llama-3.1-8b-instant"                               # fijo y rápido
 GROQ_TIMEOUT = 12                                                   # fijo y razonable
+
+# Static files
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
