@@ -143,7 +143,7 @@ LANGUAGES = [
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-STATICFILES_DIRS = [BASE_DIR / 'static']  # para CSS/JS/imagenes globales
+
 MEDIA_URL = '/multimedia/'
 MEDIA_ROOT = BASE_DIR / 'multimedia'      # subidas de usuarios / imágenes
 
