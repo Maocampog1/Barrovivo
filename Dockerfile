@@ -4,6 +4,9 @@ FROM python:3.11-slim
 # Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DEBUG=False
+ENV DJANGO_SETTINGS_MODULE=Barrovivo.settings
+ENV ALLOWED_HOSTS="*"
 
 WORKDIR /app
 
@@ -25,7 +28,7 @@ RUN apt-get update -y && apt-get install -y \
 
 # Copiar e instalar dependencias Python
 COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt && pip cache purge
 
 # Copiar el código del proyecto
 COPY . /app/
