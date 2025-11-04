@@ -39,5 +39,6 @@ RUN python manage.py collectstatic --noinput
 # Exponer puerto del servidor
 EXPOSE 8080
 
-# Arranque con Gunicorn
-CMD ["gunicorn", "Barrovivo.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
+# Ejecutar collectstatic en runtime y servir con runserver temporalmente
+CMD python manage.py collectstatic --noinput && \
+    python manage.py runserver 0.0.0.0:8080
